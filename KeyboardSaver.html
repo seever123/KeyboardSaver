@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Keyboard Saver — instant keyboard layout converter between English, Arabic, and Kurdish (Sorani).">
+<meta name="theme-color" content="#0f0f0f">
+<meta property="og:title" content="Keyboard Saver">
+<meta property="og:description" content="We know how you feel. Fix your keyboard language instantly.">
+<title>Keyboard Saver</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f;--bg2:#181818;--bg3:#222;--bg4:#2a2a2a;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);--border3:rgba(255,255,255,0.22);
+  --text:#f0ede8;--text2:#888;--text3:#505050;
+  --accent:#d4a853;
+  --en:#7eb8f5;--en-dim:rgba(126,184,245,0.1);
+  --ar:#f0886a;--ar-dim:rgba(240,136,106,0.1);
+  --ku:#7dd4a8;--ku-dim:rgba(125,212,168,0.1);
+  --radius:14px;--radius-sm:8px;--radius-xs:5px;
+  --font:'Sora',sans-serif;--mono:'IBM Plex Mono',monospace;
+  --ease:0.18s ease;
+  --shadow:0 2px 16px rgba(0,0,0,0.4);
+}
+[data-theme="light"]{
+  --bg:#f5f2ed;--bg2:#ede9e2;--bg3:#e2ddd6;--bg4:#d8d2ca;
+  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.16);--border3:rgba(0,0,0,0.24);
+  --text:#1a1814;--text2:#5a5550;--text3:#9a9590;
+  --en:#2a7fd4;--en-dim:rgba(42,127,212,0.1);
+  --ar:#c94f30;--ar-dim:rgba(201,79,48,0.1);
+  --ku:#258a5a;--ku-dim:rgba(37,138,90,0.1);
+  --shadow:0 2px 16px rgba(0,0,0,0.12);
+}
+html{font-size:16px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{display:flex;flex-direction:column;min-height:100vh}
+
+/* ── UI LANGUAGE SWITCHER ── */
+.ui-lang-btns{
+  display:flex;gap:2px;background:var(--bg3);
+  border:1px solid var(--border);border-radius:20px;padding:2px;
+}
+.ui-lang-btn{
+  font-size:10px;font-weight:600;padding:2px 8px;border-radius:16px;
+  border:none;color:var(--text3);background:transparent;
+  cursor:pointer;font-family:var(--mono);transition:all var(--ease)
+}
+.ui-lang-btn:hover{color:var(--text2)}
+.ui-lang-btn.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.3)}
+
+
+  /* ── LOGO ANIMATION (from keyboard-smasher-logo-versions) ── */
+  .ks-scene{position:relative;flex-shrink:0;overflow:hidden;display:block}
+  .ks-scene .ks-shake{position:absolute;top:0;left:0;width:100%;height:100%}
+  .ks-scene .ks-inner{position:absolute;top:0;left:0;width:480px;height:461px;transform-origin:top left}
+  .ks-layer{position:absolute;top:0;left:0;width:100%;height:100%}
+  .ks-scene.sz-sm{width:44px;height:42px}
+  .ks-scene.sz-sm .ks-inner{transform:scale(0.0917)}
+  .ks-scene.anim-always .ks-shake{animation:ksShake 1.6s ease-in-out infinite}
+  @keyframes ksShake{
+    0%,46%,100%{transform:translate(0,0)}
+    42%{transform:translate(-3px,2px)}
+    43%{transform:translate(3px,-2px)}
+    44%{transform:translate(-2px,1px)}
+    45%{transform:translate(2px,-1px)}
+  }
+  .ks-arm{transform-origin:240px 80px}
+  .ks-scene.anim-always .ks-arm{animation:ksArmSmash 1.6s ease-in-out infinite}
+  @keyframes ksArmSmash{
+    0%  {transform:translateY(-38px) rotate(-6deg)}
+    25% {transform:translateY(-60px) rotate(-12deg)}
+    42% {transform:translateY(12px)  rotate(4deg)}
+    55% {transform:translateY(-10px) rotate(-2deg)}
+    65% {transform:translateY(0px)   rotate(0deg)}
+    80% {transform:translateY(0px)   rotate(0deg)}
+    100%{transform:translateY(-38px) rotate(-6deg)}
+  }
+  .ks-keyboard{transform-origin:240px 400px}
+  .ks-scene.anim-always .ks-keyboard{animation:ksKbImpact 1.6s ease-in-out infinite}
+  @keyframes ksKbImpact{
+    0%,100%{transform:scaleY(1) translateY(0)}
+    42%    {transform:scaleY(0.96) translateY(4px)}
+    55%    {transform:scaleY(1.02) translateY(-2px)}
+    65%    {transform:scaleY(1) translateY(0)}
+  }
+  .ks-key{position:absolute;background:currentColor;border-radius:3px;opacity:0;width:22px;height:22px}
+  .ks-scene.anim-always .ks-key{animation:ksFlyKey 1.6s ease-out infinite}
+  .ks-key.k1{top:330px;left:150px;animation-delay:0s;   --tx:-110px;--ty:-140px;--rot:-340deg}
+  .ks-key.k2{top:340px;left:210px;animation-delay:.04s; --tx:-60px; --ty:-180px;--rot:280deg}
+  .ks-key.k3{top:320px;left:270px;animation-delay:.02s; --tx:20px;  --ty:-200px;--rot:-300deg}
+  .ks-key.k4{top:350px;left:330px;animation-delay:.06s; --tx:130px; --ty:-150px;--rot:320deg}
+  .ks-key.k5{top:360px;left:190px;animation-delay:.03s; --tx:-30px; --ty:-240px;--rot:-260deg}
+  .ks-key.k6{top:335px;left:245px;animation-delay:.05s; --tx:80px;  --ty:-170px;--rot:400deg}
+  @keyframes ksFlyKey{
+    0%,40%  {opacity:0;transform:translate(0,0) rotate(0deg) scale(1)}
+    43%     {opacity:1;transform:translate(calc(var(--tx)*.1),calc(var(--ty)*.1)) rotate(20deg) scale(1.1)}
+    75%     {opacity:.9;transform:translate(var(--tx),var(--ty)) rotate(var(--rot)) scale(.7)}
+    90%,100%{opacity:0;transform:translate(calc(var(--tx)*1.4),calc(var(--ty)*1.3)) rotate(calc(var(--rot)*1.2)) scale(.3)}
+  }
+  .ks-color-white{color:#ffffff}
+  .ks-color-dark{color:#020202}
+
+  /* ── THEME TOGGLE ── */
+.theme-btn{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all var(--ease);flex-shrink:0;
+  margin-left:8px;
+}
+.theme-btn:hover{border-color:var(--border3);color:var(--text);background:var(--bg4)}
+.theme-btn svg{width:15px;height:15px;transition:opacity .15s}
+.theme-btn .icon-moon{opacity:1}
+.theme-btn .icon-sun{opacity:0;position:absolute}
+[data-theme="light"] .theme-btn .icon-moon{opacity:0}
+[data-theme="light"] .theme-btn .icon-sun{opacity:1}
+
+/* ── HEADER ── */
+header{
+  padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;
+  background:rgba(15,15,15,0.93);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+/* Animated SVG logo container */
+.logo-svg{width:38px;height:38px;flex-shrink:0;display:block}
+
+
+
+  28% {transform:rotate(-32deg) translateY(-22px)}
+  48% {transform:rotate(-2deg) translateY(2px)}
+  54% {transform:rotate(-2deg) translateY(2px)}
+  65% {transform:rotate(-32deg) translateY(-22px)}
+  100%{transform:rotate(-32deg) translateY(-22px)}
+}
+
+  48% {transform:translateX(0) translateY(0)}
+  50% {transform:translateX(-4px) translateY(3px) rotate(-1deg)}
+  52% {transform:translateX(4px) translateY(-2px) rotate(1deg)}
+  54% {transform:translateX(-2px) translateY(1px)}
+  56% {transform:translateX(0) translateY(0)}
+  100%{transform:translateX(0) translateY(0)}
+}
+/* Flying key particles */
+
+  48%   {transform:translate(0,0) rotate(0deg);opacity:1}
+  80%   {transform:translate(-38px,-52px) rotate(-45deg);opacity:.9}
+  100%  {transform:translate(-55px,-80px) rotate(-70deg);opacity:0}
+}
+
+  48%   {transform:translate(0,0) rotate(0deg);opacity:1}
+  80%   {transform:translate(20px,-58px) rotate(30deg);opacity:.9}
+  100%  {transform:translate(32px,-88px) rotate(55deg);opacity:0}
+}
+
+  49%   {transform:translate(0,0) rotate(0deg);opacity:1}
+  80%   {transform:translate(-12px,-65px) rotate(-20deg);opacity:.9}
+  100%  {transform:translate(-18px,-100px) rotate(-40deg);opacity:0}
+}
+
+  50%   {transform:translate(0,0) rotate(0deg);opacity:1}
+  80%   {transform:translate(42px,-44px) rotate(60deg);opacity:.9}
+  100%  {transform:translate(62px,-70px) rotate(90deg);opacity:0}
+}
+
+
+
+
+.logo-texts{display:flex;flex-direction:column;gap:0}
+.logo-title{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:-0.3px;line-height:1.2}
+.logo-tagline{font-size:10px;color:var(--text3);font-family:var(--mono);line-height:1.3;letter-spacing:0.01em}
+.logo-tagline em{color:var(--text2);font-style:normal}
+.lang-pills{display:flex;gap:5px}
+.lang-pill{
+  font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;
+  border:1px solid var(--border);color:var(--text3);font-family:var(--mono);
+  transition:all var(--ease);cursor:default;user-select:none
+}
+.lang-pill.active-en{color:var(--en);border-color:var(--en);background:var(--en-dim)}
+.lang-pill.active-ar{color:var(--ar);border-color:var(--ar);background:var(--ar-dim)}
+.lang-pill.active-ku{color:var(--ku);border-color:var(--ku);background:var(--ku-dim)}
+
+/* ── MAIN ── */
+main{flex:1;max-width:1020px;width:100%;margin:0 auto;padding:2.25rem 1.5rem 4rem}
+.hero{text-align:center;margin-bottom:2rem;animation:fadeUp .5s ease both}
+.hero h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;letter-spacing:-0.03em;line-height:1.2;margin-bottom:.5rem}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:13.5px;color:var(--text2);max-width:440px;margin:0 auto}
+
+/* ── RAGE TEXT HERO (Newsreader font + jitter) ── */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+
+:root {
+  --rage: oklch(0.645 0.246 16.4);
+  --font-display: "Newsreader", serif;
+}
+[data-theme="light"] {
+  --rage: oklch(0.52 0.22 16.4);
+}
+
+@keyframes jitter {
+  0%,100%{ transform:translate(0,0) rotate(0); }
+  20%    { transform:translate(-1px, 1px) rotate(-1.5deg); }
+  40%    { transform:translate( 1px,-1px) rotate( 1.5deg); }
+  60%    { transform:translate(-1px,-1px) rotate(-1deg); }
+  80%    { transform:translate( 1px, 1px) rotate( 1deg); }
+}
+.kinetic-jitter {
+  display:inline-block;
+  animation:jitter 0.18s infinite ease-in-out;
+}
+.text-rage { color:var(--rage); }
+
+.hero-section {
+  padding: 3.5rem 0 2rem;
+}
+.hero-h1 {
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 9vw, 6rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+  text-wrap: balance;
+}
+.hero-p {
+  max-width: 52ch;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--text2);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.hero-zinc { color: var(--text3); }
+
+/* ── LAYOUT SELECTOR ── */
+.layout-bar{
+  display:flex;align-items:center;gap:8px;margin-bottom:.9rem;flex-wrap:wrap;
+  animation:fadeUp .5s .05s ease both
+}
+.layout-label{font-size:11px;font-family:var(--mono);color:var(--text3);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.layout-btns{display:flex;gap:4px;flex-wrap:wrap}
+.layout-btn{
+  font-size:11px;font-family:var(--mono);font-weight:500;
+  padding:4px 10px;border-radius:var(--radius-xs);
+  border:1px solid var(--border);color:var(--text2);
+  background:transparent;cursor:pointer;transition:all var(--ease);white-space:nowrap
+}
+.layout-btn:hover{border-color:var(--border2);color:var(--text)}
+.layout-btn.active{background:var(--bg3);border-color:var(--border3);color:var(--text)}
+.layout-ref-btn{
+  margin-left:auto;display:flex;align-items:center;gap:5px;
+  font-size:11px;font-family:var(--mono);color:var(--text2);
+  padding:4px 10px;border-radius:var(--radius-xs);
+  border:1px solid var(--border);background:transparent;cursor:pointer;transition:all var(--ease)
+}
+.layout-ref-btn:hover{border-color:var(--border2);color:var(--text)}
+.layout-ref-btn.kbd-open{border-color:var(--border3);color:var(--text);background:var(--bg3)}
+
+/* ── KEYBOARD VISUAL ── */
+.kbd-panel{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  margin-bottom:1rem;overflow:hidden;
+  animation:slideDown .22s ease both
+}
+.kbd-panel.hidden{display:none}
+
+/* Layout tabs */
+.kbd-tabs{
+  display:flex;align-items:stretch;border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none
+}
+.kbd-tabs::-webkit-scrollbar{display:none}
+.kbd-tab{
+  flex-shrink:0;padding:9px 14px;font-size:11px;font-family:var(--mono);font-weight:500;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:all var(--ease);white-space:nowrap
+}
+.kbd-tab:hover{color:var(--text2)}
+.kbd-tab.active{color:var(--text);border-bottom-color:var(--accent)}
+
+/* Panel body */
+.kbd-body{padding:16px}
+
+/* Layout description */
+.kbd-desc{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:12px 14px;margin-bottom:14px
+}
+.kbd-desc-icon{font-size:20px;flex-shrink:0;line-height:1;margin-top:1px}
+.kbd-desc-text{}
+.kbd-desc-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.kbd-desc-detail{font-size:11px;color:var(--text2);line-height:1.5}
+.kbd-desc-where{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px}
+
+/* View toggle: full / EN / AR / KU */
+.kbd-view-row{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px
+}
+.kbd-view-label{font-size:10px;font-family:var(--mono);color:var(--text3);letter-spacing:.05em;text-transform:uppercase}
+.kbd-views{display:flex;gap:3px}
+.kbd-view-btn{
+  font-size:10px;font-family:var(--mono);padding:3px 8px;border-radius:4px;
+  border:1px solid var(--border);color:var(--text3);background:transparent;cursor:pointer;transition:all var(--ease)
+}
+.kbd-view-btn:hover{border-color:var(--border2);color:var(--text2)}
+.kbd-view-btn.active{background:var(--bg4);border-color:var(--border3);color:var(--text)}
+.kbd-view-btn.v-en.active{color:var(--en);border-color:var(--en);background:var(--en-dim)}
+.kbd-view-btn.v-ar.active{color:var(--ar);border-color:var(--ar);background:var(--ar-dim)}
+.kbd-view-btn.v-ku.active{color:var(--ku);border-color:var(--ku);background:var(--ku-dim)}
+
+/* Legend */
+.kbd-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.kbd-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3);font-family:var(--mono)}
+.kbd-legend-swatch{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+
+/* Keyboard scroll area */
+.kbd-scroll{overflow-x:auto;padding-bottom:6px}
+.kbd-row{display:flex;gap:5px;margin-bottom:5px}
+
+/* Keys — much larger and readable */
+.key{
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  border-radius:7px;border:1px solid var(--border2);background:var(--bg3);
+  padding:5px 4px 4px;flex-shrink:0;min-width:52px;height:58px;overflow:hidden;
+  position:relative;transition:background var(--ease)
+}
+.key:hover{background:var(--bg4)}
+.key.wide{min-width:70px}
+.key.wider{min-width:88px}
+.key.space-key{min-width:260px;height:48px;justify-content:center}
+.key.enter-key{min-width:88px}
+.key.backspace-key{min-width:80px}
+.key.tab-key{min-width:70px}
+.key.shift-key{min-width:100px}
+.key.caps-key{min-width:80px}
+
+/* Physical key label (top-left) */
+.key-phys{
+  position:absolute;top:4px;left:5px;
+  font-size:9px;color:var(--text3);font-family:var(--mono);line-height:1;font-weight:500
+}
+/* EN layout output (large, centre) */
+.key-en{
+  font-size:14px;font-weight:600;color:var(--en);font-family:var(--mono);line-height:1;
+  text-align:center;margin-top:6px
+}
+/* AR output (bottom-right, RTL) */
+.key-ar{
+  position:absolute;bottom:4px;right:5px;
+  font-size:13px;color:var(--ar);font-family:var(--font);line-height:1;direction:rtl
+}
+/* KU output (bottom-left) */
+.key-ku{
+  position:absolute;bottom:4px;left:5px;
+  font-size:11px;color:var(--ku);font-family:var(--font);line-height:1;direction:rtl
+}
+/* Non-char keys (Shift, Tab, etc.) */
+.key-label{
+  font-size:9px;color:var(--text3);font-family:var(--mono);
+  text-align:center;padding:0 2px
+}
+
+/* View modes: hide/show specific layers */
+.kbd-view-all .key-phys,.kbd-view-all .key-en,.kbd-view-all .key-ar,.kbd-view-all .key-ku{opacity:1}
+.kbd-view-en .key-ar,.kbd-view-en .key-ku{opacity:.12}
+.kbd-view-ar .key-en,.kbd-view-ar .key-ku{opacity:.12}
+.kbd-view-ar .key-ar{opacity:1}
+.kbd-view-ku .key-en,.kbd-view-ku .key-ar{opacity:.12}
+.kbd-view-ku .key-ku{opacity:1}
+
+/* Arabic layout: big char in centre */
+.key-ar-main{
+  font-size:20px;color:var(--ar);font-family:var(--font);line-height:1;
+  text-align:center;direction:rtl;margin-top:4px
+}
+
+/* ── INPUT ── */
+.input-section{animation:fadeUp .5s .1s ease both}
+.input-label{
+  font-size:11px;font-weight:600;color:var(--text2);font-family:var(--mono);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:.55rem;
+  display:flex;align-items:center;justify-content:space-between
+}
+.detected-lang{font-size:11px;color:var(--text2);font-family:var(--mono);transition:all var(--ease);display:flex;align-items:center;gap:5px}
+.detected-lang .dot{width:6px;height:6px;border-radius:50%;background:var(--text3);display:inline-block;transition:background var(--ease)}
+.detected-lang.lang-en .dot{background:var(--en)}
+.detected-lang.lang-ar .dot{background:var(--ar)}
+.detected-lang.lang-ku .dot{background:var(--ku)}
+.textarea-wrap{position:relative}
+textarea{
+  width:100%;min-height:120px;padding:15px 46px 15px 18px;
+  font-size:19px;font-family:var(--font);line-height:1.65;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);color:var(--text);resize:vertical;outline:none;
+  transition:border-color var(--ease),box-shadow var(--ease);caret-color:var(--accent);
+  unicode-bidi:plaintext
+}
+textarea::placeholder{color:var(--text3);font-size:15px}
+textarea:focus{border-color:rgba(212,168,83,.38);box-shadow:0 0 0 3px rgba(212,168,83,.07)}
+.clear-btn{
+  position:absolute;top:11px;right:11px;width:27px;height:27px;border-radius:6px;
+  background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;
+  display:none;align-items:center;justify-content:center;transition:all var(--ease)
+}
+.clear-btn:hover{background:var(--bg4);color:var(--text)}
+.clear-btn.visible{display:flex}
+
+/* ── DIVIDER ── */
+.arrow-row{display:flex;align-items:center;gap:12px;margin:1.1rem 0 .9rem;animation:fadeUp .5s .2s ease both}
+.arrow-row::before,.arrow-row::after{content:'';flex:1;height:1px;background:var(--border)}
+.arrow-icon{width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--text2);flex-shrink:0}
+
+/* ── OUTPUTS ── */
+.outputs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;animation:fadeUp .5s .25s ease both}
+.out-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px;transition:opacity var(--ease);position:relative;overflow:hidden
+}
+.out-card.is-source{opacity:.4;pointer-events:none}
+.out-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity var(--ease)}
+.out-card.lang-en::before{background:var(--en);opacity:1}
+.out-card.lang-ar::before{background:var(--ar);opacity:1}
+.out-card.lang-ku::before{background:var(--ku);opacity:1}
+.out-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.out-card-label{font-size:10px;font-weight:600;font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--text3);transition:color var(--ease)}
+.out-card.lang-en .out-card-label{color:var(--en)}
+.out-card.lang-ar .out-card-label{color:var(--ar)}
+.out-card.lang-ku .out-card-label{color:var(--ku)}
+.copy-btn{
+  display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:var(--radius-xs);
+  background:var(--bg3);border:1px solid var(--border);color:var(--text2);
+  font-size:10px;font-family:var(--mono);cursor:pointer;transition:all var(--ease);white-space:nowrap
+}
+.copy-btn:hover{border-color:var(--border2);color:var(--text)}
+.copy-btn.copied{color:var(--ku);border-color:var(--ku)}
+.out-text{
+  font-size:17px;line-height:1.78;color:var(--text);min-height:46px;
+  word-break:break-word;white-space:pre-wrap;unicode-bidi:plaintext;direction:ltr
+}
+.out-text.rtl{direction:rtl;text-align:right;font-size:19px;unicode-bidi:plaintext}
+.out-text .ph{color:var(--text3);font-size:12px;font-style:italic;direction:ltr}
+
+/* ── HOW IT WORKS ── */
+.how-section{margin-top:2.75rem;animation:fadeUp .5s .35s ease both}
+.section-title{font-size:10px;font-weight:600;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.9rem}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.how-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.how-name{font-size:12px;font-weight:600;margin-bottom:3px}
+.how-desc{font-size:11.5px;color:var(--text2);line-height:1.5}
+.how-sample{margin-top:9px;padding-top:9px;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text3);line-height:1.9}
+.how-sample .k{color:var(--accent)}
+.how-sample .v{color:var(--text2)}
+
+/* ── FOOTER ── */
+footer{
+  padding:1rem 2rem;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem
+}
+.footer-left{display:flex;align-items:center;gap:8px}
+.footer-logo-sm{
+  width:22px;height:22px;flex-shrink:0
+}
+.footer-logo-sm .fa-arm{transform-origin:820px 240px;animation:armSmash 2.2s cubic-bezier(.36,.07,.19,.97) infinite}
+.footer-logo-sm .fa-kbd{transform-origin:660px 590px;animation:kbdShake 2.2s cubic-bezier(.36,.07,.19,.97) infinite}
+.footer-brand{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.footer-links{display:flex;gap:6px;align-items:center}
+.footer-pill{
+  font-size:10px;color:var(--text3);font-family:var(--mono);
+  padding:3px 9px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;cursor:pointer;transition:all var(--ease)
+}
+.footer-pill:hover{border-color:var(--border2);color:var(--text2)}
+
+/* ── MODALS ── */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:500;
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .22s ease
+}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:20px 20px 0 0;
+  width:100%;max-width:560px;
+  padding:0;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);
+  max-height:80vh;overflow-y:auto;
+  position:relative
+}
+.modal-backdrop.open .modal{transform:translateY(0)}
+.modal-handle{
+  width:36px;height:4px;border-radius:2px;background:var(--border2);
+  margin:12px auto 0;display:block
+}
+.modal-inner{padding:20px 24px 32px}
+.modal-title{
+  font-size:15px;font-weight:700;letter-spacing:-0.3px;margin-bottom:4px;
+  display:flex;align-items:center;gap:8px
+}
+.modal-title-icon{font-size:18px}
+.modal-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:18px}
+.modal-body{font-size:13.5px;color:var(--text2);line-height:1.72}
+.modal-body strong{color:var(--text);font-weight:600}
+.modal-body p{margin-bottom:.85rem}
+.modal-body p:last-child{margin-bottom:0}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all var(--ease)
+}
+.modal-close:hover{background:var(--bg4);color:var(--text)}
+.modal{position:relative}
+
+/* donation options grid */
+.donate-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px
+}
+.donate-chip{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:9px 8px;text-align:center;font-size:11px;color:var(--text2);line-height:1.4
+}
+.donate-chip .emoji{font-size:16px;display:block;margin-bottom:4px}
+.donate-chip.no{opacity:.45;text-decoration:line-through}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:740px){
+  .outputs{grid-template-columns:1fr}
+  .how-grid{grid-template-columns:1fr}
+  .donate-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+  header{padding:.85rem 1rem}
+  .logo-tagline{display:none}
+  main{padding:1.5rem .9rem 3rem}
+  textarea{font-size:17px}
+  .key{min-width:28px;height:38px}
+  .key-ar-char{font-size:10px}
+  .key.wide{min-width:42px}
+  .key.space-key{min-width:130px}
+  footer{padding:.9rem 1rem;flex-direction:column;align-items:flex-start}
+}
+@media(max-width:380px){
+  .lang-pills{display:none}
+  .layout-ref-btn{display:none}
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── CONTACT MODAL ── */
+.contact-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:2rem;}
+.contact-card{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:36px 40px;max-width:480px;width:100%;position:relative;}
+.contact-eyebrow{font-size:10px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem;}
+.contact-name{font-size:1.5rem;font-weight:600;letter-spacing:-.025em;margin-bottom:1.75rem;color:var(--text);}
+.contact-rows{display:flex;flex-direction:column;gap:12px;}
+.contact-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;gap:12px;}
+.contact-row-label{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--text3);flex-shrink:0;}
+.contact-row-val{font-size:13px;color:var(--text);font-family:var(--mono);text-decoration:none;text-align:right;}
+a.contact-row-val{color:var(--text);} a.contact-row-val:hover{color:var(--accent);text-decoration:underline;}
+.contact-close-btn{margin-top:24px;width:100%;padding:10px;border-radius:var(--radius-sm);background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;cursor:pointer;transition:all var(--ease);}
+.contact-close-btn:hover{border-color:var(--accent);color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ── HEADER ── -->
+<header>
+  <a class="logo" href="#" aria-label="Keyboard Saver home">
+    <!-- Logo: from keyboard-smasher-logo-versions reference -->
+    <div class="ks-scene sz-sm anim-always ks-color-white" aria-hidden="true">
+      <div class="ks-shake">
+        <div class="ks-inner">
+          <svg class="ks-layer ks-keyboard" viewBox="0 0 479.88 460.28" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M1.59,347.48c.99-1.75,7.16-7.37,13.72-12.5s21.13-16.68,32.38-25.68c11.25-8.99,22.07-17.03,24.04-17.85,2.42-1.01,5.54-1.34,9.62-1.01,7.67,.61,63.26,13.25,65.13,14.8,1.84,1.53,1.8,5.35-.09,6.91-1.21,1.01-7.39-.11-32.75-5.9-17.19-3.93-32.92-7.13-34.95-7.12-3.78,.02-5.61,1.39-60.29,44.92-2.33,1.85-4.66,3.71-6.99,5.56,1.66,.38,3.32,.76,4.99,1.14,2.74,.62,22.53,5.29,43.98,10.36,21.45,5.07,54.08,12.75,72.5,17.07s49.03,11.5,68,15.96,50.7,11.89,70.5,16.52,43.65,10.22,53,12.45,18.21,4.04,19.68,4.04c2.66,0,7.24-3.43,55.32-41.54,8.8-6.98,16.12-13,16.27-13.38,.15-.39-9-2.8-20.33-5.38-6.87-1.56-13.73-3.12-20.6-4.67-1.16,.88-2.31,1.76-3.47,2.65-1.91,1.45-3.11,2.96-2.67,3.35,.44,.39,5.3,1.72,10.8,2.96,11.07,2.49,12.5,3.23,12.5,6.52,0,5.04-1.39,4.99-27.43-.99-13.5-3.1-25.34-5.37-26.31-5.04-3.21,1.11-9.67,7.44-8.15,7.99,.77,.28,9.86,2.51,20.22,4.96,10.35,2.45,19.47,4.99,20.25,5.64,3.07,2.55,.94,6.94-3.36,6.94-1.31,0-8.28-1.36-15.47-3.02-4.36-1.01-8.72-2.02-13.08-3.02-1.53,1.29-3.05,2.59-4.58,3.88-2.52,2.14-4.58,4.22-4.58,4.64s4.72,1.94,10.5,3.39l10.5,2.64v3.5c0,3.07-.34,3.54-2.72,3.81-2.43,.28-131.72-29.5-138.82-31.98-4.74-1.65-4.71-4.32,.13-11.21,11.35-16.15,15.04-20.62,17.03-20.62s19.37,9.68,23.13,12.84c2.7,2.26,2.12,5.05-2.39,11.47-2.98,4.25-3.79,6.11-2.91,6.66,.68,.42,4.61,1.5,8.73,2.41,2.5,.55,5,1.1,7.5,1.65,1.64-1.37,3.27-2.74,4.91-4.11,2.7-2.26,4.69-4.46,4.42-4.9s-2.18-1.11-4.23-1.49c-9.42-1.77-9.78-5.21-1.33-12.64,3.27-2.88,5.76-5.55,5.52-5.93-.24-.38-4.46-1.48-9.4-2.44-9.67-1.88-12.74-3.84-11.6-7.44,.36-1.14,1.64-2.31,2.84-2.61,1.98-.49,24.81,4.34,59.07,12.5,4.3,1.02,8.59,2.04,12.88,3.07,1.15-.88,2.3-1.76,3.45-2.63,1.9-1.45,3.08-2.96,2.62-3.36s-14.97-3.83-32.26-7.63c-17.28-3.79-32.02-7.5-32.75-8.23-1.7-1.7-1.68-3.32,.07-5.72,1.72-2.35-4.65-3.57,75.6,14.53,54.41,12.27,82.47,19.14,84.16,20.61,3.71,3.31,4.84,7.68,4.82,18.61-.03,14.41-1.09,16.4-14.11,26.54-5.7,4.44-18.92,14.91-29.37,23.27-27.83,22.25-31.39,24.77-36.59,25.89-5.9,1.27-3.47,1.78-86.41-17.92-16.5-3.92-45.97-10.9-65.5-15.52s-44.95-10.64-56.5-13.38-45.08-10.65-74.5-17.58-54.89-13.04-56.58-13.59c-1.7-.55-4.4-2.36-6-4.04-2.85-2.97-2.92-3.3-3.21-15.23-.25-10.25,0-12.69,1.5-15.36h0Z"/>
+            <path fill="currentColor" d="M41.13,335c1.61-1.98,33.59-27.2,36.31-28.63,1.62-.85,6.85-.02,24.5,3.93,12.34,2.76,23,5.49,23.69,6.06,1.89,1.56,1.5,5.59-.64,6.74-1.34,.72-4.1,.53-9.46-.63-2.52-.55-5.05-1.1-7.57-1.64-1.35,.93-2.7,1.87-4.04,2.8-2.22,1.54-4.04,3.1-4.04,3.47s4.39,1.71,9.75,2.99c12.39,2.95,13.45,3.51,13.06,6.85-.41,3.5-18.04,18.17-21.88,18.2-3.23,.03-56.3-12.57-58.97-14-2.24-1.2-2.55-3.88-.72-6.14h0Z"/>
+            <path fill="currentColor" d="M124.13,349.44c.69-.53,7.61-3.13,15.38-5.78,4.71-1.6,9.42-3.21,14.13-4.81,2.62,1.35,5.24,2.7,7.87,4.05,11.1,5.72,11.07,6.51-.82,19.25-5.92,6.35-10.06,9.99-11.37,9.99-1.13,0-7.54-3.85-14.25-8.56-9.62-6.75-12.2-9.05-12.2-10.88,0-1.27,.56-2.75,1.25-3.28v.02Z"/>
+            <path fill="currentColor" d="M174.15,363.35c2.11-1.75,22.62-8.35,24.9-8.01,1.17,.17,2.62,1.1,3.22,2.07,1.84,2.94-.5,5.02-9.5,8.45-4.62,1.76-8.7,3.33-9.07,3.5-.37,.17-.19,2.42,.41,5.01,1.29,5.61-.05,8.07-4.15,7.59-2.16-.25-2.95-1.28-4.78-6.3-2.52-6.91-2.85-10.81-1.04-12.31h0Z"/>
+            <path fill="currentColor" d="M129.63,327.97c1.97-1.69,22.93-4.36,26.16-3.34,2.92,.93,3.68,4.39,1.44,6.55-2.59,2.5-25.43,4.99-27.79,3.04-2.07-1.72-1.99-4.38,.18-6.25h.01Z"/>
+          </svg>
+          <svg class="ks-layer ks-arm" viewBox="0 0 479.88 460.28" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M475.43,223.17c-.32,0-4.74,3.88-9.82,8.64-34.91,32.66-71.91,53.7-117.64,66.9-26.45,7.64-55.47,12.78-79.67,14.13-3.7,.2-7.39,.41-11.08,.61-.88-2.36-1.75-4.72-2.63-7.08-4.27-11.52-5.82-21.29-5.5-34.67,.1-3.99,.19-7.97,.29-11.96,1-.24,2-.47,3-.71,1.65-.39,8.4-1.44,15-2.34,31.27-4.26,67.56-14.48,90-25.36,24.72-11.99,42.81-24.69,62.77-44.08,12.73-12.38,15.06-15.78,12.72-18.6-2.59-3.12-5.31-1.54-15.96,9.27-18.38,18.65-37.54,32.5-61.11,44.17-10.42,5.17-29.76,12.6-37.43,14.58l-.14,.04-13.85,3.86v.03c-.23,.05-.46,.11-.69,.16-2.27,.54-4.54,1.07-6.81,1.61-10.35,2.43-34.92,6.53-44.13,7.36-2.54,.23-5.08,.46-7.63,.69-3.37-3.23-6.74-6.45-10.11-9.68-10.76-10.29-16.58-13.76-26.14-15.58-2.95-.56-6.8-.74-8.55-.42-.51,.1-.93,.17-1.3,.2,0,0-.02,0-.05,.01-.5,.08-4.62,.81-7.98,1.98-3.15,1.09-5.66,2.53-6.35,2.95l-.06,.03c-.45,.29-.96,.61-1.54,.97-6.13,3.81-10.7,9.89-12.76,16.97-.85,2.93-2.07,5.32-2.72,5.32-6.08,.03-14.83,5.84-17.29,11.48-2.49,5.72-1.36,12.77,2.75,17.16,1.91,2.04,1.94,2.37,.46,6.73-2.43,7.13-.27,14.59,5.42,18.8,2.64,1.95,2.98,2.79,2.98,7.37,0,6.23,2.82,11.01,8.19,13.91,2.86,1.55,3.74,2.72,4.2,5.6,.71,4.42,3.7,8.43,7.93,10.61,3.63,1.88,19.5,2.07,28.68,.35,14.67-2.76,22.35-6.17,35.04-15.57,2.85-2.11,5.69-4.22,8.54-6.33,4.32-.37,8.64-.74,12.96-1.12,13.07-1.12,29.18-3.08,38.89-4.73h.07l21.03-4.03,.12-.02c58.95-13.61,101.05-35.3,142.6-73.48,7.97-7.31,9.75-9.48,9.75-11.81,0-2.5-2.19-4.92-4.45-4.92Z"/>
+          </svg>
+          <div class="ks-key k1"></div>
+          <div class="ks-key k2"></div>
+          <div class="ks-key k3"></div>
+          <div class="ks-key k4"></div>
+          <div class="ks-key k5"></div>
+          <div class="ks-key k6"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-texts">
+      <span class="logo-title">Keyboard Saver</span>
+    </div>
+  </a>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span id="pill-en" style="display:none"></span><span id="pill-ar" style="display:none"></span><span id="pill-ku" style="display:none"></span>
+    <div class="ui-lang-btns" id="ui-lang-btns" title="Switch interface language">
+      <button class="ui-lang-btn active" data-uilang="en">EN</button>
+      <button class="ui-lang-btn" data-uilang="ar">ع</button>
+      <button class="ui-lang-btn" data-uilang="ku">کو</button>
+    </div>
+    <button class="theme-btn" id="theme-btn" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- Layout selector -->
+  <div class="layout-bar">
+    <span class="layout-label">Layout:</span>
+    <div class="layout-btns" id="layout-btns">
+      <button class="layout-btn active" data-layout="qwerty">QWERTY</button>
+      <button class="layout-btn" data-layout="azerty">AZERTY</button>
+      <button class="layout-btn" data-layout="qwertz">QWERTZ</button>
+    </div>
+    <button class="layout-ref-btn" id="toggle-kbd" aria-expanded="false">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+      Keyboard map
+    </button>
+  </div>
+
+  <!-- Keyboard visual reference -->
+  <div class="kbd-panel hidden" id="kbd-panel">
+    <!-- Layout tabs -->
+    <div class="kbd-tabs" id="kbd-tabs" role="tablist">
+      <button class="kbd-tab active" data-layout="qwerty" role="tab">QWERTY</button>
+      <button class="kbd-tab" data-layout="azerty" role="tab">AZERTY</button>
+      <button class="kbd-tab" data-layout="qwertz" role="tab">QWERTZ</button>
+    </div>
+    <div class="kbd-body">
+      <!-- Description card -->
+      <div class="kbd-desc" id="kbd-desc">
+        <div class="kbd-desc-icon" id="kbd-desc-icon">⌨️</div>
+        <div class="kbd-desc-text">
+          <div class="kbd-desc-name" id="kbd-desc-name">QWERTY</div>
+          <div class="kbd-desc-detail" id="kbd-desc-detail">The standard English keyboard layout. Used across the US, UK, and most of the world by default.</div>
+          <div class="kbd-desc-where" id="kbd-desc-where">Common on: Windows · macOS · Linux · most phones</div>
+        </div>
+      </div>
+      <!-- View selector + legend -->
+      <div class="kbd-view-row">
+        <div class="kbd-legend" id="kbd-legend">
+          <div class="kbd-legend-item"><div class="kbd-legend-swatch" style="background:var(--en)"></div><span id="leg-en">Physical key</span></div>
+          <div class="kbd-legend-item"><div class="kbd-legend-swatch" style="background:var(--ar)"></div><span>Arabic output</span></div>
+          <div class="kbd-legend-item"><div class="kbd-legend-swatch" style="background:var(--ku)"></div><span>Kurdish output</span></div>
+        </div>
+        <div class="kbd-views" id="kbd-views">
+          <button class="kbd-view-btn active" data-view="all">All</button>
+          <button class="kbd-view-btn v-en" data-view="en">EN</button>
+          <button class="kbd-view-btn v-ar" data-view="ar">AR</button>
+          <button class="kbd-view-btn v-ku" data-view="ku">KU</button>
+        </div>
+      </div>
+      <!-- Keyboard grid -->
+      <div class="kbd-scroll">
+        <div id="kbd-visual" aria-label="Keyboard layout reference"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-section">
+    <div class="input-label">
+      <span data-i18n="input_label">Your input</span>
+      <div class="detected-lang" id="detected-lang">
+        <span class="dot"></span>
+        <span id="detected-text">detecting...</span>
+      </div>
+    </div>
+    <div class="textarea-wrap">
+      <textarea id="input"
+        placeholder="Type or paste — wrong keyboard, fixed here..." data-i18n-placeholder="input_placeholder"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        aria-label="Input text to convert"></textarea>
+      <button class="clear-btn" id="clear-btn" aria-label="Clear input">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="arrow-row" aria-hidden="true">
+    <div class="arrow-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+
+  <!-- 3 Outputs -->
+  <div class="outputs">
+    <div class="out-card" id="card-en">
+      <div class="out-card-header">
+        <span class="out-card-label" id="label-en">English</span>
+        <button class="copy-btn" id="copy-en">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy
+        </button>
+      </div>
+      <div class="out-text" id="out-en"><span class="ph">English conversion</span></div>
+    </div>
+    <div class="out-card" id="card-ar">
+      <div class="out-card-header">
+        <span class="out-card-label" id="label-ar">Arabic</span>
+        <button class="copy-btn" id="copy-ar">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy
+        </button>
+      </div>
+      <div class="out-text rtl" id="out-ar"><span class="ph">Arabic conversion</span></div>
+    </div>
+    <div class="out-card" id="card-ku">
+      <div class="out-card-header">
+        <span class="out-card-label" id="label-ku">Kurdish (Sorani)</span>
+        <button class="copy-btn" id="copy-ku">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy
+        </button>
+      </div>
+      <div class="out-text rtl" id="out-ku"><span class="ph">Kurdish conversion</span></div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-section">
+    <div class="section-title">How it works</div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-name" style="color:var(--en)">English (QWERTY / AZERTY / QWERTZ / Dvorak)</div>
+        <div class="how-desc">Select your physical keyboard layout, type or paste, and get Arabic and Kurdish equivalents instantly.</div>
+        <div class="how-sample">
+          <span class="k">q</span><span class="v"> → ض (AR) · ق (KU)</span><br>
+          <span class="k">h</span><span class="v"> → ا (AR) · ه (KU)</span><br>
+          <span class="k">?</span><span class="v"> → ؟ (AR/KU)</span>
+        </div>
+      </div>
+      <div class="how-card">
+        <div class="how-name" style="color:var(--ar)">Arabic (عربي)</div>
+        <div class="how-desc">Paste Arabic-layout keystrokes typed while English was active — recover both English and Kurdish automatically.</div>
+        <div class="how-sample">
+          <span class="k">ض</span><span class="v"> → q (EN)</span><br>
+          <span class="k">ص</span><span class="v"> → w (EN)</span><br>
+          <span class="k">،</span><span class="v"> → , (EN)</span>
+        </div>
+      </div>
+      <div class="how-card">
+        <div class="how-name" style="color:var(--ku)">Kurdish Sorani (کوردی)</div>
+        <div class="how-desc">Exclusive Kurdish chars (ە، ێ، ۆ، ڕ، ڤ) identify Kurdish input precisely and convert to both other scripts.</div>
+        <div class="how-sample">
+          <span class="k">ق</span><span class="v"> → q (EN)</span><br>
+          <span class="k">ە</span><span class="v"> → e (EN)</span><br>
+          <span class="k">ۆ</span><span class="v"> → o (EN)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-left">
+    <!-- Tiny animated logo in footer -->
+    <svg class="footer-logo-sm" viewBox="330 380 680 310" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="fa-kbd"><path d="M 442.703,537.322 C 443.691,535.574 449.865,529.949 456.422,524.822 C 462.979,519.695 477.551,508.140 488.802,499.145 C 512.844,481.292 515.264,480.281 522.464,480.277 C 530.137,480.891 585.720,493.523 587.595,495.079 C 589.439,496.610 589.391,500.431 587.508,501.994 C 586.297,502.999 554.758,496.096 519.809,488.980 C 516.031,489.001 459.515,533.899 452.530,539.460 C 457.515,540.597 574,568.023 642,583.986 C 712.500,600.504 765.500,612.950 785.177,616.994 C 787.840,617 840.500,575.450 856.772,562.067 C 836.444,556.692 815.843,552.018 809.704,558.018 C 815,559.740 831.574,563.467 833,567.500 C 833,572.542 805.565,566.505 779.257,561.467 C 776.049,562.575 771.109,569.458 780.971,571.968 C 801.679,576.872 811.575,580.062 808.211,587 C 792.743,583.978 779.666,580.956 775.083,584.840 C 770.500,589.063 775.225,591.414 791.500,595.500 C 791.500,599 791.163,602.539 788.775,602.814 C 657.058,573.310 649.955,570.834 645.213,569.181 C 645.244,566.516 661.432,543.474 667.116,539 C 669.042,539 690.250,551.841 692.947,554.104 C 692.368,556.889 684.882,567.561 684.954,569.972 C 693.686,572.380 701.188,574.029 706.095,569.920 C 710.512,565.019 706.279,563.525 696.859,561.758 C 696.498,558.320 704.949,550.881 710.469,544.950 C 706.004,543.472 692.317,532.464 694.296,531.974 C 700.753,516.897 781,535 862.714,553.436 C 868.868,558.918 869.978,574.218 855.870,600.763 C 826.500,624.032 795.106,648.804 789.911,649.922 C 703.500,632.006 574,603.112 507,585.537 C 452.112,572.498 444.415,567.914 441.203,552.687 C 440.954,542.437 441.192,539.995 442.703,537.322 Z" fill="#FFFFFF" opacity="0.6"/></g>
+      <g class="fa-arm"><path d="M 591.394,454.481 C 593.849,448.846 602.603,443.035 608.679,443.006 C 613.463,430.600 624.160,420.710 628.630,414.042 C 624.623,361.500 630.003,329 630.003,329 C 634.329,329 634.978,331.136 633.799,341.515 C 631.956,357.741 634.153,398.808 637.599,412.537 C 641.441,414.577 649.988,414.998 676.130,430.575 C 686.244,440.254 690.500,449.571 693.500,448.864 C 739.768,442.268 756.762,427 796.924,411.925 C 820.491,400.253 858.029,367.750 873.989,358.487 C 876.330,361.307 861.266,377.083 798.502,421.160 C 745.500,425.113 754.007,407.441 756.762,427 C 756.062,432.199 693.872,439.565 686.244,440.254 C 695.711,496.199 698.338,503.288 709.419,502.672 C 767.716,503.419 911.250,429.737 921,417.925 C 921,420.257 906.735,421.640 789.095,488.544 C 764.932,504.055 756.818,513.486 763.599,522.564 C 749.354,506.932 708.539,511.998 695.578,513.113 C 652.003,535.009 623.315,534.663 611.186,518.457 C 600.017,497.170 594.596,478.370 594.142,471.645 C 590.029,467.254 588.901,460.204 591.394,454.481 Z" fill="#FFFFFF" opacity="0.9"/></g>
+    </svg>
+    <span class="footer-brand">Keyboard Saver · EN — AR — کو</span>
+  </div>
+  <div class="footer-links">
+    <button class="footer-pill" id="open-privacy">🔒 Privacy</button>
+    <button class="footer-pill" id="open-contact">Contact Developer</button>
+  </div>
+</footer>
+
+<!-- ── PRIVACY MODAL ── -->
+<div class="modal-backdrop" id="modal-privacy" role="dialog" aria-modal="true" aria-label="Privacy policy">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="close-privacy" aria-label="Close">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-inner">
+      <div class="modal-title"><span class="modal-title-icon">🔒</span> Privacy</div>
+      <div class="modal-sub">where your pasted data goes</div>
+      <div class="modal-body">
+        <p><strong>Nowhere.</strong> The whole website doesn't save any info. Conversion happens entirely in your browser — nothing is sent to any server, logged, stored, or analysed.</p>
+        <p>We don't track visits. We don't use analytics. We don't even want your cookies — there are none to give.</p>
+        <p>Paste your passwords, your secrets, your embarrassing autocorrect disasters. It stays between you and your screen.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTACT MODAL ── -->
+<div class="contact-overlay" id="modal-contact" style="display:none" onclick="if(event.target===this)closeContactModal()">
+  <div class="contact-card">
+    <div class="contact-eyebrow">Developer Contact</div>
+    <h3 class="contact-name">Seever .S</h3>
+    <div class="contact-rows">
+      <div class="contact-row"><span class="contact-row-label">Personal Email</span><a class="contact-row-val" href="mailto:s.h.seever@gmail.com">s.h.seever@gmail.com</a></div>
+    </div>
+    <button class="contact-close-btn" onclick="closeContactModal()">Close</button>
+  </div>
+</div>
+</div><!-- .page -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// KEYBOARD LAYOUT DEFINITIONS  (physical QWERTY key → typed char)
+// ═══════════════════════════════════════════════════════════════
+const LAYOUTS = {
+  qwerty:{ name:'QWERTY', map:{
+    '`':'`','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','0':'0','-':'-','=':'=',
+    'q':'q','w':'w','e':'e','r':'r','t':'t','y':'y','u':'u','i':'i','o':'o','p':'p','[':'[',']':']','\\':'\\',
+    'a':'a','s':'s','d':'d','f':'f','g':'g','h':'h','j':'j','k':'k','l':'l',';':';',"'":"'",
+    'z':'z','x':'x','c':'c','v':'v','b':'b','n':'n','m':'m',',':',','.':'.','/':'/'}},
+  azerty:{ name:'AZERTY (French)', map:{
+    '`':'\u00b2','1':'&','2':'\u00e9','3':'"','4':"'",'5':'(','6':'-','7':'\u00e8','8':'_','9':'\u00e7','0':'\u00e0','-':')','=':'=',
+    'q':'a','w':'z','e':'e','r':'r','t':'t','y':'y','u':'u','i':'i','o':'o','p':'p','[':'^',']':'$','\\':'*',
+    'a':'q','s':'s','d':'d','f':'f','g':'g','h':'h','j':'j','k':'k','l':'l',';':'m',"'":'ù',
+    'z':'w','x':'x','c':'c','v':'v','b':'b','n':'n','m':',',',':';','.':':','/':'!'}},
+  qwertz:{ name:'QWERTZ (German)', map:{
+    '`':'^','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','0':'0','-':'\u00df','=':'\u00b4',
+    'q':'q','w':'w','e':'e','r':'r','t':'t','y':'z','u':'u','i':'i','o':'o','p':'p','[':'\u00fc',']':'+','\\':'#',
+    'a':'a','s':'s','d':'d','f':'f','g':'g','h':'h','j':'j','k':'k','l':'l',';':'\u00f6',"'":'ä',
+    'z':'y','x':'x','c':'c','v':'v','b':'b','n':'n','m':'m',',':',','.':'.','/':'-'}},
+  dvorak:{ name:'Dvorak', map:{
+    '`':'`','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','0':'0','-':'[','=':']',
+    'q':"'",'w':',','e':'.','r':'p','t':'y','y':'f','u':'g','i':'c','o':'r','p':'l','[':'/','\\':'\\',']':'=',
+    'a':'a','s':'o','d':'e','f':'u','g':'i','h':'d','j':'h','k':'t','l':'n',';':'s',"'":'/',
+    'z':';','x':'q','c':'j','v':'k','b':'x','n':'b','m':'m',',':'w','.':'v','/':'z'}},
+  'ar-win':{ name:'Arabic (Windows)', isArabic:true, map:{
+    '`':'\u0630','1':'\u0661','2':'\u0662','3':'\u0663','4':'\u0664','5':'\u0665','6':'\u0666','7':'\u0667','8':'\u0668','9':'\u0669','0':'\u0660','-':'-','=':'=',
+    'q':'\u0636','w':'\u0635','e':'\u062b','r':'\u0642','t':'\u0641','y':'\u063a','u':'\u0639','i':'\u0647','o':'\u062e','p':'\u062d','[':'\u062c',']':'\u062f','\\':'\u0630',
+    'a':'\u0634','s':'\u0633','d':'\u064a','f':'\u0628','g':'\u0644','h':'\u0627','j':'\u062a','k':'\u0646','l':'\u0645',';':'\u0643',"'":'\u0637',
+    'z':'\u0626','x':'\u0621','c':'\u0624','v':'\u0631','b':'\u0644\u0627','n':'\u0649','m':'\u0629',',':'\u0648','.':'\u0632','/':'\u0638'}}
+};
+
+// ═══════════════════════════════════════════════════════════════
+// CONVERSION MAPS — built from complete manual keyboard reference
+// Each entry: Q2AR[qwerty_char] = arabic_char
+// ═══════════════════════════════════════════════════════════════
+const Q2AR = {
+  // Row 1 letters
+  'q':'\u0636','Q':'\u064e',  // q=ض Q=َ
+  'w':'\u0635','W':'\u064b',  // w=ص W=ً
+  'e':'\u062b','E':'\u064f',  // e=ث E=ُ
+  'r':'\u0642','R':'\u064c',  // r=ق R=ٌ  ← KEY FIX: r→ق not ر
+  't':'\u0641','T':'\u0644\u0625', // t=ف T=لإ
+  'y':'\u063a','Y':'\u0625',  // y=غ Y=إ
+  'u':'\u0639','U':'\u2018',  // u=ع U=‘ (Arabic kbd Shift+U = LEFT SINGLE QUOT)
+  'i':'\u0647','I':'\u00f7',  // i=ه I=÷
+  'o':'\u062e','O':'\u00d7',  // o=خ O=×
+  'p':'\u062d','P':'\u061b',  // p=ح P=؛
+  '[':'\u062c','{':'<',       // [=ج {=<
+  ']':'\u062f','}':'>',       // ]=د }=>
+  // Row 2 letters
+  'a':'\u0634','A':'\u0650',  // a=ش A=ِ
+  's':'\u0633','S':'\u064d',  // s=س S=ٍ
+  'd':'\u064a','D':']',       // d=ي D=]
+  'f':'\u0628','F':'[',       // f=ب F=[
+  'g':'\u0644','G':'\u0644\u0623', // g=ل G=لأ
+  'h':'\u0627','H':'\u0623',  // h=ا H=أ
+  'j':'\u062a','J':'\u0640',  // j=ت J=ـ
+  'k':'\u0646','K':'\u060c',  // k=ن K=،
+  'l':'\u0645','L':'/',       // l=م L=/
+  ';':'\u0643',':':':',       // ;=ك :=:
+  "'":'\u0637','"':'"',       // '=ط "="
+  '\\':'\\','|':'|',
+  // Row 3 letters
+  'z':'\u0626','Z':'~',       // z=ئ Z=~
+  'x':'\u0621','X':'\u0652',  // x=ء X=ْ
+  'c':'\u0624','C':'}',       // c=ؤ C=}
+  'v':'\u0631','V':'{',       // v=ر V={
+  'b':'\u0644\u0627','B':'\u0644\u0622', // b=لا B=لآ
+  'n':'\u0649','N':'\u0622',  // n=ى N=آ
+  'm':'\u0629','M':'\u2019',  // m=ة M=’ (Arabic kbd Shift+M = RIGHT SINGLE QUOT)
+  ',':'\u0648','<':',',       // ,=و <=,
+  '.':'\u0632','>':'.',       // .=ز >=.
+  '/':'\u0638','?':'\u061f',  // /=ظ ?=؟
+  '`':'\u0630','~':'\u0651',  // `=ذ ~=ّ
+  // Numbers → Arabic-Indic
+  '1':'\u0661','!':'!',
+  '2':'\u0662','@':'@',
+  '3':'\u0663','#':'#',
+  '4':'\u0664','$':'$',
+  '5':'\u0665','%':'%',
+  '6':'\u0666','^':'^',
+  '7':'\u0667','&':'&',
+  '8':'\u0668','*':'*',
+  '9':'\u0669','(':'\u0029',
+  '0':'\u0660',')':'\u0028',
+  '-':'-','_':'_','=':'=','+':'+',
+  ' ':' ','\n':'\n','\t':'\t'
+};
+
+const Q2KU = {
+  // Row 1 letters
+  'q':'\u0642','Q':'`',       // q=ق Q=`
+  'w':'\u0648','W':'\u0648\u0648', // w=و W=وو
+  'e':'\u06d5','E':'\u064a',  // e=ە E=ي
+  'r':'\u0631','R':'\u0695',  // r=ر R=ڕ
+  't':'\u062a','T':'\u0637',  // t=ت T=ط
+  'y':'\u06cc','Y':'\u06ce',  // y=ی Y=ێ
+  'u':'\u0626','U':'\u0621',  // u=ئ U=ء
+  'i':'\u062d','I':'\u0639',  // i=ح I=ع
+  'o':'\u06c6','O':'\u0624',  // o=ۆ O=ؤ
+  'p':'\u067e','P':'\u062b',  // p=پ P=ث
+  '[':']','{':'{',            // [=] {={
+  ']':'[','}':'}',            // ]=[ }=}
+  // Row 2 letters
+  'a':'\u0627','A':'\u0622',  // a=ا A=آ
+  's':'\u0633','S':'\u0634',  // s=س S=ش
+  'd':'\u062f','D':'\u0630',  // d=د D=ذ
+  'f':'\u0641','F':'\u0625',  // f=ف F=إ
+  'g':'\u06af','G':'\u063a',  // g=گ G=غ
+  'h':'\u0647','H':'\u200c',  // h=ه H=ZWNJ
+  'j':'\u0698','J':'\u0623',  // j=ژ J=أ
+  'k':'\u06a9','K':'\u0643',  // k=ک K=ك
+  'l':'\u0644','L':'\u06b5',  // l=ل L=ڵ
+  ';':'\u061b',':':':',       // ;=؛ :=:
+  "'":"'",'"':'"',
+  '\\':'\\','|':'|',
+  // Row 3 letters
+  'z':'\u0632','Z':'\u0636',  // z=ز Z=ض
+  'x':'\u062e','X':'\u0635',  // x=خ X=ص
+  'c':'\u062c','C':'\u0686',  // c=ج C=چ
+  'v':'\u06a4','V':'\u0638',  // v=ڤ V=ظ
+  'b':'\u0628','B':'\u0649',  // b=ب B=ى
+  'n':'\u0646','N':'\u0629',  // n=ن N=ة
+  'm':'\u0645','M':'\u0640',  // m=م M=ـ
+  ',':'\u060c','<':'>',       // ,=، <=<
+  '.':'.','>'  :'<',          // .=. >=<
+  '/':'/','?':'\u061f',       // /=/ ?=؟
+  '`':'`','~':'~',
+  // Numbers → Kurdish-Indic
+  '1':'\u06f1','!':'!',
+  '2':'\u06f2','@':'@',
+  '3':'\u06f3','#':'#',
+  '4':'\u06f4','$':'$',
+  '5':'\u06f5','%':'\u066a',
+  '6':'\u06f6','^':'^',
+  '7':'\u06f7','&':'&',
+  '8':'\u06f8','*':'*',
+  '9':'\u06f9','(':'\u0029',
+  '0':'\u06f0',')':'\u0028',
+  '-':'-','_':'_','=':'=','+':'+',
+  ' ':' ','\n':'\n','\t':'\t'
+};
+
+// Reverse maps: script char → QWERTY key
+const AR2Q = {};
+const _ar2qEntries = [
+  ['!','!'],['"','"'],['#','#'],['$','$'],
+  ['%','%'],['&','&'],["'","U"],['‘','U'],['’','M'],['(',')'],
+  [')',  '('],['*','*'],['+','+'],[',' ,'<'],
+  ['-','-'],['.','>'],['/','L'],[':',':'],
+  ['<','{'  ],['=','='],['>','}'],['@','@'],
+  ['[','F'],['\\','\\'],   [']','D'],['^','^'],
+  ['_','_'],['{','V'],['|','|'],['}','C'],
+  ['~','Z'],['×','O'],['÷','I'],
+  ['،','K'],['؛','P'],['؟','?'],
+  ['ء','x'],['آ','N'],['أ','H'],
+  ['ؤ','c'],['إ','Y'],['ئ','z'],
+  ['ا','h'],['ب','f'],['ة','m'],
+  ['ت','j'],['ث','e'],['ج','['],
+  ['ح','p'],['خ','o'],['د',']'],
+  ['ذ','`'],['ر','v'],['ز','.'],
+  ['س','s'],['ش','a'],['ص','w'],
+  ['ض','q'],['ط',"'"],['ظ','/'],
+  ['ع','u'],['غ','y'],['ـ','J'],
+  ['ف','t'],['ق','r'],['ك',';'],
+  ['ل','g'],['م','l'],['ن','k'],
+  ['ه','i'],['و',','],['ى','n'],
+  ['ي','d'],['ً','W'],['ٌ','R'],
+  ['ٍ','S'],['َ','Q'],['ُ','E'],
+  ['ِ','A'],['ّ','~'],['ْ','X'],
+  ['٠','0'],['١','1'],['٢','2'],
+  ['٣','3'],['٤','4'],['٥','5'],
+  ['٦','6'],['٧','7'],['٨','8'],
+  ['٩','9'],
+];
+for(const[sc,en] of _ar2qEntries) AR2Q[sc]=en;
+
+const KU2Q = {};
+const _ku2qEntries = [
+  ['!','!'],['#','#'],['$','$'],['&','&'],
+  ["'","'"],['(',')'],[')',  '('],['*','*'],
+  ['+','+'],['-','-'],['.','.'],['/','/'],
+  [':',':'],['<','>'],[  '=','='],['>','<'],
+  ['@','@'],['[',']'],['\\','\\'],[']','['],
+  ['^','^'],['_','_'],['`','Q'],['{','{'],
+  ['|','|'],['}','}'],['~','~'],
+  ['،',','],['؛',';'],['؟','?'],
+  ['ء','U'],['آ','A'],['أ','J'],
+  ['ؤ','O'],['إ','F'],['ئ','u'],
+  ['ا','a'],['ب','b'],['ة','N'],
+  ['ت','t'],['ث','P'],['ج','c'],
+  ['ح','i'],['خ','x'],['د','d'],
+  ['ذ','D'],['ر','r'],['ز','z'],
+  ['س','s'],['ش','S'],['ص','X'],
+  ['ض','Z'],['ط','T'],['ظ','V'],
+  ['ع','I'],['غ','G'],['ـ','M'],
+  ['ف','f'],['ق','q'],['ك','K'],
+  ['ل','l'],['م','m'],['ن','n'],
+  ['ه','h'],['و','w'],['ى','B'],
+  ['ي','E'],['٪','%'],
+  ['پ','p'],['چ','C'],['ڕ','R'],
+  ['ژ','j'],['ڤ','v'],['ک','k'],
+  ['گ','g'],['ڵ','L'],['ۆ','o'],
+  ['ی','y'],['ێ','Y'],['ە','e'],
+  ['۰','0'],['۱','1'],['۲','2'],
+  ['۳','3'],['۴','4'],['۵','5'],
+  ['۶','6'],['۷','7'],['۸','8'],
+  ['۹','9'],['‌','H'],
+];
+for(const[sc,en] of _ku2qEntries) KU2Q[sc]=en;
+
+// ═══════════════════════════════════════════════════════════════
+// LAYOUT BRIDGE  — for non-QWERTY layouts
+// ═══════════════════════════════════════════════════════════════
+let currentLayout='qwerty';
+const _layoutRevCache={};
+function getLayoutRev(id){
+  if(_layoutRevCache[id]) return _layoutRevCache[id];
+  const rev={};
+  for(const[qk,lc] of Object.entries(LAYOUTS[id].map)){
+    if(lc && !rev[lc]) rev[lc]=qk;
+  }
+  _layoutRevCache[id]=rev; return rev;
+}
+function mapThrough(text,toQ,finalMap){
+  return text.split('').map(ch=>{
+    const qk=toQ?(toQ[ch]!==undefined?toQ[ch]:ch):ch;
+    return finalMap[qk]!==undefined?finalMap[qk]:ch;
+  }).join('');
+}
+function mapChars(text,map,multi){
+  // multi: optional object of 2-char source sequences → target (e.g. {'لا':'b'})
+  if(!multi) return text.split('').map(ch=>map[ch]!==undefined?map[ch]:ch).join('');
+  let result='', i=0;
+  while(i<text.length){
+    if(multi && i+1<text.length && multi[text[i]+text[i+1]]!==undefined){
+      result+=multi[text[i]+text[i+1]]; i+=2;
+    } else {
+      result+=map[text[i]]!==undefined?map[text[i]]:text[i]; i++;
+    }
+  }
+  return result;
+}
+
+// Multi-char Arabic sequences → English key
+const AR_MULTI = {
+  'لا':'b',  // لا → b
+  'لآ':'B',  // لآ → B
+  'لأ':'G',  // لأ → G
+  'لإ':'T',  // لإ → T
+};
+// Multi-char Kurdish sequences → English key
+const KU_MULTI = {
+  'وو':'W',  // وو → W (Shift+W on Kurdish keyboard produces وو)
+};
+
+// ═══════════════════════════════════════════════════════════════
+// DETECTION
+// ═══════════════════════════════════════════════════════════════
+const KU_EX  = /[\u06d5\u06ce\u06c6\u0695\u06a4\u0686\u06af\u067e\u0698\u06b5\u06bf\u06cb\u06c7]/;
+const AR_RNG = /[\u0600-\u06FF]/;
+function detectLang(text){
+  if(!text.trim()) return null;
+  let en=0,ar=0,ku=0;
+  for(const ch of text){
+    if(KU_EX.test(ch)) ku+=3;
+    else if(AR_RNG.test(ch)) ar++;
+    else if(/[a-zA-Z\u00C0-\u024F]/.test(ch)) en++;
+  }
+  if(ku>0) return 'ku';
+  if(ar>en) return 'ar';
+  if(en>0) return 'en';
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COMPUTE
+// ═══════════════════════════════════════════════════════════════
+function computeAll(text){
+  const lang=detectLang(text);
+  let en='',ar='',ku='';
+  if(lang==='en'){
+    const toQ=currentLayout==='qwerty'?null:getLayoutRev(currentLayout);
+    ar=mapThrough(text,toQ,Q2AR);
+    ku=mapThrough(text,toQ,Q2KU);
+    en=text;
+  } else if(lang==='ar'){
+    en=mapChars(text,AR2Q,AR_MULTI);
+    ku=mapChars(en,Q2KU);
+    ar=text;
+  } else if(lang==='ku'){
+    en=mapChars(text,KU2Q,KU_MULTI);
+    ar=mapChars(en,Q2AR,AR_MULTI);
+    ku=text;
+  }
+  return{lang,en,ar,ku};
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KEYBOARD VISUAL
+// ═══════════════════════════════════════════════════════════════
+const LAYOUT_META={
+  qwerty:{icon:'🌍',name:'QWERTY',detail:'Standard English keyboard — Q·W·E·R·T·Y on the top row. Default on most computers worldwide.',where:'Common on: Windows · macOS · Linux · most phones'},
+  azerty:{icon:'🇫🇷',name:'AZERTY (French)',detail:'French variant — A and Q swapped, Z and W swapped, M at semicolon.',where:'Common on: France · Belgium · some North African keyboards'},
+  qwertz:{icon:'🇩🇪',name:'QWERTZ (German)',detail:'German variant — Y and Z are swapped. Extra keys: Ä Ö Ü ß.',where:'Common on: Germany · Austria · Switzerland · Czech Republic'},
+  dvorak:{icon:'🔬',name:'Dvorak',detail:'Ergonomic layout — vowels on the left home row, common consonants on the right.',where:'Niche but global — must be manually set in OS settings'},
+  'ar-win':{icon:'🌙',name:'Arabic (Windows)',detail:'Standard Arabic keyboard. Arabic characters printed directly on keys.',where:'Common on: Windows in Arab countries · Arabic phones'}
+};
+const KBD_ROWS=[
+  ['`','1','2','3','4','5','6','7','8','9','0','-','='],
+  ['q','w','e','r','t','y','u','i','o','p','[',']','\\'],
+  ['a','s','d','f','g','h','j','k','l',';',"'"],
+  ['z','x','c','v','b','n','m',',','.','/']
+];
+let currentKbdView='all';
+function buildKbdVisual(layoutId){
+  const layout=LAYOUTS[layoutId],lmap=layout.map,isAr=!!layout.isArabic;
+  const meta=LAYOUT_META[layoutId];
+  const c=document.getElementById('kbd-visual');
+  c.innerHTML=''; c.className='kbd-view-'+currentKbdView;
+  document.getElementById('kbd-layout-name').textContent=meta.name;
+  document.getElementById('kbd-desc-icon').textContent=meta.icon;
+  document.getElementById('kbd-desc-name').textContent=meta.name;
+  document.getElementById('kbd-desc-detail').textContent=meta.detail;
+  document.getElementById('kbd-desc-where').textContent=meta.where;
+  document.getElementById('leg-en').textContent=isAr?'Arabic key':'Physical key (this layout)';
+  document.getElementById('kbd-views').style.display=isAr?'none':'flex';
+  KBD_ROWS.forEach((keys,ri)=>{
+    const row=document.createElement('div'); row.className='kbd-row';
+    const pads=[0,32,48,64];
+    if(pads[ri]){const s=document.createElement('div');s.style.cssText='width:'+pads[ri]+'px;flex-shrink:0';row.appendChild(s);}
+    keys.forEach(qk=>{
+      const lchar=lmap[qk]||'',arChar=isAr?'':(Q2AR[qk]||''),kuChar=isAr?'':(Q2KU[qk]||'');
+      const key=document.createElement('div'); key.className='key';
+      if(qk==='\\'||qk===']') key.classList.add('wide');
+      if(isAr){
+        const p=document.createElement('div');p.className='key-phys';p.textContent=qk.toUpperCase();
+        const m=document.createElement('div');m.className='key-ar-main';m.textContent=lchar;
+        key.appendChild(p);key.appendChild(m);
+      } else {
+        const p=document.createElement('div');p.className='key-phys';
+        p.textContent=(lchar&&lchar!==qk)?lchar.toUpperCase():qk.toUpperCase();
+        const e=document.createElement('div');e.className='key-en';e.textContent=lchar||qk;
+        const a=document.createElement('div');a.className='key-ar';a.textContent=arChar;
+        const ku=document.createElement('div');ku.className='key-ku';ku.textContent=kuChar;
+        key.appendChild(p);key.appendChild(e);
+        if(arChar)key.appendChild(a);if(kuChar)key.appendChild(ku);
+      }
+      row.appendChild(key);
+    });
+    if(ri===3){
+      const g=document.createElement('div');g.style.cssText='width:4px;flex-shrink:0';row.appendChild(g);
+      const sp=document.createElement('div');sp.className='key space-key';
+      const sl=document.createElement('div');sl.className='key-label';sl.style.fontSize='9px';sl.textContent='SPACE';
+      sp.appendChild(sl);row.appendChild(sp);
+    }
+    c.appendChild(row);
+  });
+}
+function setKbdView(view){
+  currentKbdView=view;
+  const c=document.getElementById('kbd-visual');
+  if(c) c.className='kbd-view-'+view;
+  document.querySelectorAll('.kbd-view-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DOM REFS
+// ═══════════════════════════════════════════════════════════════
+const inputEl=document.getElementById('input');
+const clearBtn=document.getElementById('clear-btn');
+const detectedEl=document.getElementById('detected-lang');
+const detectedTx=document.getElementById('detected-text');
+const outEn=document.getElementById('out-en'),outAr=document.getElementById('out-ar'),outKu=document.getElementById('out-ku');
+const cardEn=document.getElementById('card-en'),cardAr=document.getElementById('card-ar'),cardKu=document.getElementById('card-ku');
+const pillEn=document.getElementById('pill-en'),pillAr=document.getElementById('pill-ar'),pillKu=document.getElementById('pill-ku');
+
+// ═══════════════════════════════════════════════════════════════
+// I18N
+// ═══════════════════════════════════════════════════════════════
+const I18N={
+  en:{detecting:'detecting...',lang_en:'English detected',lang_ar:'Arabic detected',lang_ku:'Kurdish detected',
+    ph_en:'English conversion',ph_ar:'Arabic conversion',ph_ku:'Kurdish conversion',
+    copy:'Copy',copied:'Copied!',source:'(source)',how_title:'How it works',
+    layout_label:'Layout:',kbd_map_btn:'Keyboard map',
+    privacy_btn:'\uD83D\uDD12 Privacy',contact_btn:'Contact Developer',dir:'ltr'},
+  ar:{detecting:'\u062c\u0627\u0631\u064d...',lang_en:'\u0625\u0646\u062c\u0644\u064a\u0632\u064a',lang_ar:'\u0639\u0631\u0628\u064a',lang_ku:'\u0643\u0631\u062f\u064a',
+    ph_en:'\u062a\u062d\u0648\u064a\u0644 \u0625\u0646\u062c\u0644\u064a\u0632\u064a',ph_ar:'\u062a\u062d\u0648\u064a\u0644 \u0639\u0631\u0628\u064a',ph_ku:'\u062a\u062d\u0648\u064a\u0644 \u0643\u0631\u062f\u064a',
+    copy:'\u0646\u0633\u062e',copied:'\u062a\u0645!',source:'(\u0645\u0635\u062f\u0631)',how_title:'\u0643\u064a\u0641 \u064a\u0639\u0645\u0644',
+    layout_label:'\u0627\u0644\u062a\u062e\u0637\u064a\u0637:',kbd_map_btn:'\u062e\u0631\u064a\u0637\u0629 \u0644\u0648\u062d\u0629 \u0627\u0644\u0645\u0641\u0627\u062a\u064a\u062d',
+    privacy_btn:'\uD83D\uDD12 \u062e\u0635\u0648\u0635\u064a\u0629',contact_btn:'تواصل مع المطور',dir:'rtl'},
+  ku:{detecting:'\u062f\u06d5\u0646\u0627\u0633\u06ce...',lang_en:'\u0626\u06cc\u0646\u06af\u0644\u06cc\u0632\u06cc',lang_ar:'\u0639\u06d5\u0631\u06d5\u0628\u06cc',lang_ku:'\u06a9\u0648\u0631\u062f\u06cc',
+    ph_en:'\u0648\u06d5\u0631\u06af\u06ce\u0695\u0627\u0646\u06cc \u0626\u06cc\u0646\u06af\u0644\u06cc\u0632\u06cc',ph_ar:'\u0648\u06d5\u0631\u06af\u06ce\u0695\u0627\u0646\u06cc \u0639\u06d5\u0631\u06d5\u0628\u06cc',ph_ku:'\u0648\u06d5\u0631\u06af\u06ce\u0695\u0627\u0646\u06cc \u06a9\u0648\u0631\u062f\u06cc',
+    copy:'\u06a9\u06c6\u067e\u06cc',copied:'\u06a9\u06c6\u067e\u06cc \u06a9\u0631\u0627!',source:'(\u0633\u06d5\u0631\u0686\u0627\u0648\u06d5)',how_title:'\u0686\u06c6\u0646 \u06a9\u0627\u0631 \u062f\u06d5\u06a9\u0627\u062a',
+    layout_label:'\u0634\u06ce\u0648\u0627\u0632:',kbd_map_btn:'\u0646\u06d5\u062e\u0634\u06d5\u06cc \u06a9\u06cc\u0628\u06c6\u0631\u062f',
+    privacy_btn:'\uD83D\uDD12 \u062a\u0627\u06cc\u0628\u06d5\u062a\u0645\u06d5\u0646\u062f\u06cc',contact_btn:'پەیوەندی بە گەشەپێدەر',dir:'rtl'}
+};
+let currentUILang='en';
+
+// ═══════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════
+function ph(el,msg){el.innerHTML='<span class="ph">'+msg+'</span>';}
+function setCard(card,outEl,text,langCls,rtl,isSource){
+  card.className='out-card lang-'+langCls+(isSource?' is-source':'');
+  outEl.className='out-text'+(rtl?' rtl':'');
+  if(isSource){outEl.textContent=text||'';if(!text)ph(outEl,I18N[currentUILang].source);}
+  else if(!text){ph(outEl,I18N[currentUILang]['ph_'+langCls]||'');}
+  else{outEl.textContent=text;}
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UPDATE
+// ═══════════════════════════════════════════════════════════════
+function update(){
+  const text=inputEl.value;
+  const t=I18N[currentUILang];
+  clearBtn.classList.toggle('visible',!!text);
+  inputEl.style.direction=AR_RNG.test(text)?'rtl':'ltr';
+  inputEl.style.textAlign=AR_RNG.test(text)?'right':'left';
+  if(!text.trim()){
+    detectedTx.textContent=t.detecting;
+    detectedEl.className='detected-lang';
+    [pillEn,pillAr,pillKu].forEach(p=>p.className='lang-pill');
+    [cardEn,cardAr,cardKu].forEach(c=>c.className='out-card');
+    ph(outEn,t.ph_en);ph(outAr,t.ph_ar);ph(outKu,t.ph_ku);
+    outEn.className='out-text';outAr.className='out-text rtl';outKu.className='out-text rtl';
+    return;
+  }
+  const{lang,en,ar,ku}=computeAll(text);
+  detectedEl.className='detected-lang'+(lang?' lang-'+lang:'');
+  detectedTx.textContent=lang?t['lang_'+lang]:'?';
+  [pillEn,pillAr,pillKu].forEach(p=>p.className='lang-pill');
+  if(lang==='en')pillEn.className='lang-pill active-en';
+  else if(lang==='ar')pillAr.className='lang-pill active-ar';
+  else if(lang==='ku')pillKu.className='lang-pill active-ku';
+  setCard(cardEn,outEn,en,'en',false,lang==='en');
+  setCard(cardAr,outAr,ar,'ar',true,lang==='ar');
+  setCard(cardKu,outKu,ku,'ku',true,lang==='ku');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COPY
+// ═══════════════════════════════════════════════════════════════
+function doCopy(el,btn){
+  if(el.querySelector('.ph')) return;
+  const text=el.textContent,t=I18N[currentUILang],ORIG=btn.innerHTML;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> '+t.copied;
+    btn.classList.add('copied');setTimeout(()=>{btn.innerHTML=ORIG;btn.classList.remove('copied');},1600);
+  }).catch(()=>{
+    const r=document.createRange();r.selectNode(el);
+    window.getSelection().removeAllRanges();window.getSelection().addRange(r);
+    document.execCommand('copy');window.getSelection().removeAllRanges();
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// I18N APPLY
+// ═══════════════════════════════════════════════════════════════
+function applyI18n(lang){
+  const t=I18N[lang]; currentUILang=lang;
+  const ll=document.querySelector('.layout-label');if(ll)ll.textContent=t.layout_label;
+  const kb=document.getElementById('toggle-kbd');
+  if(kb){const svg=kb.querySelector('svg');kb.textContent=' '+t.kbd_map_btn;if(svg)kb.prepend(svg);}
+  const ht=document.querySelector('.section-title');if(ht)ht.textContent=t.how_title;
+  const fp=document.getElementById('open-privacy');if(fp)fp.textContent=t.privacy_btn;
+  const fc=document.getElementById('open-contact');if(fc)fc.textContent=t.contact_btn;
+  document.querySelectorAll('.ui-lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.uilang===lang));
+  update();
+  localStorage.setItem('ks-uilang',lang);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════════════════
+inputEl.addEventListener('input',update);
+clearBtn.addEventListener('click',()=>{inputEl.value='';update();inputEl.focus();});
+document.getElementById('copy-en').addEventListener('click',()=>doCopy(outEn,document.getElementById('copy-en')));
+document.getElementById('copy-ar').addEventListener('click',()=>doCopy(outAr,document.getElementById('copy-ar')));
+document.getElementById('copy-ku').addEventListener('click',()=>doCopy(outKu,document.getElementById('copy-ku')));
+document.getElementById('layout-btns').addEventListener('click',e=>{
+  const btn=e.target.closest('.layout-btn');if(!btn)return;
+  document.querySelectorAll('.layout-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');currentLayout=btn.dataset.layout;
+  document.querySelectorAll('.kbd-tab').forEach(t=>t.classList.toggle('active',t.dataset.layout===currentLayout));
+  if(!document.getElementById('kbd-panel').classList.contains('hidden'))buildKbdVisual(currentLayout);
+  update();
+});
+document.getElementById('kbd-tabs').addEventListener('click',e=>{
+  const tab=e.target.closest('.kbd-tab');if(!tab)return;
+  document.querySelectorAll('.kbd-tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');currentLayout=tab.dataset.layout;
+  document.querySelectorAll('.layout-btn').forEach(b=>b.classList.toggle('active',b.dataset.layout===currentLayout));
+  buildKbdVisual(currentLayout);update();
+});
+document.getElementById('kbd-views').addEventListener('click',e=>{
+  const btn=e.target.closest('.kbd-view-btn');if(!btn)return;
+  setKbdView(btn.dataset.view);
+});
+const kbdPanel=document.getElementById('kbd-panel');
+const toggleKbd=document.getElementById('toggle-kbd');
+toggleKbd.addEventListener('click',()=>{
+  const wasHidden=kbdPanel.classList.toggle('hidden');
+  toggleKbd.setAttribute('aria-expanded',!wasHidden);
+  toggleKbd.classList.toggle('kbd-open',!wasHidden);
+  if(!kbdPanel.classList.contains('hidden'))buildKbdVisual(currentLayout);
+});
+document.getElementById('ui-lang-btns').addEventListener('click',e=>{
+  const btn=e.target.closest('.ui-lang-btn');if(!btn)return;
+  applyI18n(btn.dataset.uilang);
+});
+// Theme
+const themeBtn=document.getElementById('theme-btn');
+const htmlEl=document.documentElement;
+function applyTheme(t){if(t==='light')htmlEl.setAttribute('data-theme','light');else htmlEl.removeAttribute('data-theme');}
+const savedTheme=localStorage.getItem('ks-theme');
+if(savedTheme)applyTheme(savedTheme);
+else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)applyTheme('light');
+themeBtn.addEventListener('click',()=>{
+  const isLight=htmlEl.getAttribute('data-theme')==='light';
+  applyTheme(isLight?'dark':'light');
+  localStorage.setItem('ks-theme',isLight?'dark':'light');
+});
+// Modals
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.getElementById('open-privacy').addEventListener('click',()=>openModal('modal-privacy'));
+document.getElementById('open-contact').addEventListener('click',()=>openContactModal());
+document.getElementById('close-privacy').addEventListener('click',()=>closeModal('modal-privacy'));
+document.getElementById('modal-privacy').addEventListener('click',e=>{if(e.target===document.getElementById('modal-privacy'))closeModal('modal-privacy');});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal('modal-privacy');closeContactModal();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='v'&&document.activeElement!==inputEl)inputEl.focus();
+});
+// Contact modal
+function openContactModal(){const m=document.getElementById('modal-contact');if(m){m.style.display='flex';document.body.style.overflow='hidden';}}
+function closeContactModal(){const m=document.getElementById('modal-contact');if(m){m.style.display='none';document.body.style.overflow='';}}
+// Init
+const savedLang=localStorage.getItem('ks-uilang');
+if(savedLang&&I18N[savedLang])applyI18n(savedLang);
+update();
+</script>
+</body>
+</html>

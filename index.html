@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keyboard Saver — Company Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;1,6..72,300&family=Sora:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0c0c0c;
+  --bg2:     #141414;
+  --bg3:     #1e1e1e;
+  --bg4:     #272727;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text:    #f0ede8;
+  --text2:   #8a8580;
+  --text3:   #464340;
+  --gold:    #d4a853;
+  --gold2:   rgba(212,168,83,0.12);
+  --en:      #7eb8f5;
+  --ar:      #f0886a;
+  --ku:      #7dd4a8;
+  --red:     oklch(0.62 0.22 16.4);
+  --font:    'Sora', sans-serif;
+  --serif:   'Newsreader', serif;
+  --mono:    'IBM Plex Mono', monospace;
+  --r:       16px;
+  --r-sm:    10px;
+  --nav-bg:  rgba(12,12,12,0.92);
+}
+
+[data-theme="light"] {
+  --bg:      #f5f1eb;
+  --bg2:     #ede8e0;
+  --bg3:     #e4ddd4;
+  --bg4:     #d8d0c6;
+  --border:  rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+  --text:    #1a1714;
+  --text2:   #5c5650;
+  --text3:   #9a9590;
+  --gold:    #b8832a;
+  --gold2:   rgba(184,131,42,0.1);
+  --en:      #1a6bbf;
+  --ar:      #b83a18;
+  --ku:      #1a7a4a;
+  --red:     oklch(0.48 0.20 16.4);
+  --nav-bg:  rgba(245,241,235,0.94);
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 56px;
+}
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+.nav-links {
+  display: flex; gap: 0; list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-links a {
+  display: block;
+  padding: 0 14px;
+  height: 56px;
+  line-height: 56px;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.nav-links a:hover { color: var(--text2); }
+.nav-links a.active { color: var(--text); border-bottom-color: var(--gold); }
+.nav-cta {
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-try {
+  padding: 7px 16px;
+  background: var(--gold);
+  color: #0c0c0c;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--mono);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.btn-try:hover { opacity: 0.85; }
+
+/* Theme toggle button */
+.theme-toggle {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--gold); color: var(--gold); }
+.theme-toggle svg { width: 15px; height: 15px; }
+.icon-moon { display: block; }
+.icon-sun  { display: none; }
+[data-theme="light"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun  { display: block; }
+
+/* ── SECTIONS ── */
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 100px 2.5rem 80px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+.section-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* section label */
+.sec-label {
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sec-label::after {
+  content: '';
+  flex: 1;
+  max-width: 60px;
+  height: 1px;
+  background: var(--border2);
+}
+
+/* ════════════════════════════════
+   SLIDE 1 — COVER
+════════════════════════════════ */
+#cover {
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,168,83,0.06) 0%, transparent 70%);
+}
+.cover-kicker {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.cover-title {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+}
+/* Hero typewriter */
+.hero-typewriter-wrap {
+  margin-bottom: 1.5rem;
+  min-height: 2lh;
+}
+.hero-typer {
+  font-family: var(--mono);
+  font-size: clamp(1.6rem, 3.8vw, 3rem);
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text);
+  border-right: 3px solid;
+  border-left: none;
+  padding-right: 2px;
+  padding-left: 0;
+  animation: hero-blink 0.5s step-end infinite alternate;
+}
+/* Cursor on left side when typing RTL text */
+.hero-typer.rtl-cursor {
+  border-right: none;
+  border-left: 3px solid;
+  padding-right: 0;
+  padding-left: 2px;
+}
+@keyframes hero-blink {
+  50% { border-color: transparent; }
+}
+.cover-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--text2);
+  max-width: 48ch;
+  margin: 0 auto 3rem;
+  line-height: 1.65;
+}
+.cover-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.cover-tag {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  padding: 4px 12px;
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+}
+.cover-scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: bobDown 2s ease-in-out infinite;
+}
+@keyframes bobDown {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%     { transform: translateX(-50%) translateY(6px); }
+}
+.cover-scroll::after {
+  content: '';
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--text3), transparent);
+}
+
+/* ════════════════════════════════
+   SLIDE 2 — THE PROBLEM
+════════════════════════════════ */
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+.problem-text h2 {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.25rem;
+}
+.problem-text h2 em {
+  font-style: italic;
+  color: var(--text2);
+}
+.problem-text p {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.72;
+  margin-bottom: 1rem;
+  max-width: 44ch;
+}
+.gibberish-demo {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.demo-bar {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.demo-dots { display: flex; gap: 5px; }
+.demo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border2); }
+.demo-bar-label {
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--text3);
+  margin-left: auto;
+}
+.demo-body { padding: 20px; }
+.demo-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.demo-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.demo-bubble {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px 12px 12px 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 260px;
+}
+.demo-bubble.gibberish {
+  color: var(--ar);
+  direction: rtl;
+  text-align: right;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+}
+.demo-bubble.fixed {
+  color: var(--text);
+  border-color: rgba(126,184,245,0.3);
+  background: rgba(126,184,245,0.06);
+}
+.demo-bubble small {
+  display: block;
+  font-size: 10px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 4px;
+}
+.demo-row.right { flex-direction: row-reverse; }
+.demo-row.right .demo-bubble {
+  border-radius: 12px 4px 12px 12px;
+}
+
+/* ════════════════════════════════
+   SLIDE 3 — WHO IS THIS FOR
+════════════════════════════════ */
+.audiences-intro {
+  max-width: 56ch;
+  font-size: 1.1rem;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.aud-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+}
+.aud-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+}
+.aud-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.aud-card.c-ops::before    { background: var(--en); }
+.aud-card.c-exec::before   { background: var(--gold); }
+.aud-card.c-comm::before   { background: var(--ar); }
+.aud-card.c-hr::before     { background: var(--ku); }
+.aud-card.c-it::before     { background: #b07ef5; }
+.aud-card.c-data::before   { background: #f5d07e; }
+.aud-icon { font-size: 24px; margin-bottom: 10px; }
+.aud-dept {
+  font-size: 10px;
+  font-family: var(--mono);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+.aud-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.aud-desc {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.aud-quote {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: var(--bg3);
+  border-left: 2px solid var(--border2);
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ════════════════════════════════
+   SLIDE 4 — HOW IT WORKS
+════════════════════════════════ */
+.how-intro {
+  max-width: 52ch;
+  font-size: 1.05rem;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+.flow-container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 3rem;
+}
+.flow-step {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 20px;
+  text-align: center;
+}
+.flow-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  font-size: 11px;
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 10px;
+}
+.flow-icon { font-size: 28px; margin-bottom: 8px; display:flex; justify-content:center; color:var(--text2); }
+.flow-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.flow-desc {
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+.flow-arrow {
+  font-size: 20px;
+  color: var(--text3);
+  padding: 0 12px;
+}
+
+/* Live demo strip */
+.live-strip {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.live-strip-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--ku);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.3; }
+}
+.live-strip-label {
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--text3);
+}
+.live-examples {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+.live-ex {
+  padding: 16px 20px;
+  border-right: 1px solid var(--border);
+}
+.live-ex:last-child { border-right: none; }
+.live-ex-label {
+  font-size: 9px;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.live-ex-label.l-en { color: var(--en); }
+.live-ex-label.l-ar { color: var(--ar); }
+.live-ex-label.l-ku { color: var(--ku); }
+.live-ex-in {
+  font-size: 13px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-bottom: 4px;
+}
+.live-ex-out {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.4;
+}
+.live-ex-out.rtl { direction: rtl; text-align: right; }
+
+/* ════════════════════════════════
+   SLIDE 5 — BY THE NUMBERS
+════════════════════════════════ */
+#numbers {
+  background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(212,168,83,0.04) 0%, transparent 70%);
+}
+.stats-headline {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  max-width: 20ch;
+  margin-bottom: 3.5rem;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 3rem;
+}
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 24px 20px;
+}
+.stat-num {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.stat-unit {
+  font-size: 13px;
+  color: var(--text2);
+  margin-bottom: 10px;
+}
+.stat-desc {
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.55;
+}
+
+.impact-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.impact-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+}
+.impact-scenario {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.impact-text {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.impact-text strong { color: var(--text); }
+
+/* ════════════════════════════════
+   SLIDE 6 — USE CASES
+════════════════════════════════ */
+.usecases-lede {
+  font-size: 1.05rem;
+  color: var(--text2);
+  max-width: 52ch;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+.uc-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.uc-tab {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text3);
+  font-size: 11px;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.uc-tab.active {
+  background: var(--bg3);
+  border-color: var(--border2);
+  color: var(--text);
+}
+.uc-panels > div { display: none; }
+.uc-panels > div.active { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+.uc-scenario-label {
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.75rem;
+}
+.uc-scenario-title {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  margin-bottom: 1rem;
+}
+.uc-scenario-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.uc-before-after {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.uc-ba-row {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+}
+.uc-ba-label {
+  font-size: 9px;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+.uc-ba-label.before { color: var(--ar); }
+.uc-ba-label.after  { color: var(--ku); }
+.uc-ba-text {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.uc-ba-text.rtl { direction: rtl; text-align: right; }
+
+/* ════════════════════════════════
+   SLIDE 7 — PRIVACY + ZERO SETUP
+════════════════════════════════ */
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+.trust-grid-bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 3rem;
+}
+.trust-card.optional-card {
+  border-color: rgba(212,168,83,0.25);
+  background: rgba(212,168,83,0.04);
+  position: relative;
+}
+.optional-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(212,168,83,0.4);
+  border-radius: 20px;
+  padding: 2px 8px;
+  margin-bottom: 10px;
+}
+.trust-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 24px 20px;
+}
+.trust-icon { width: 32px; height: 32px; margin-bottom: 14px; color: var(--text2); }
+.trust-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.trust-desc {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.65;
+}
+.trust-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 8px;
+}
+.trust-check::before {
+  content: '✓';
+  color: var(--ku);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.tech-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.tech-pill {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  font-size: 11px;
+}
+.tech-pill-label {
+  font-family: var(--mono);
+  color: var(--text3);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 3px;
+}
+.tech-pill-val {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* ════════════════════════════════
+   SLIDE 8 — CALL TO ACTION
+════════════════════════════════ */
+#cta {
+  min-height: 80vh;
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(212,168,83,0.07) 0%, transparent 70%);
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+.cta-eyebrow {
+  font-size: 11px;
+  font-family: var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 1.5rem;
+}
+.cta-title {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+}
+.cta-sub {
+  font-size: 1.05rem;
+  color: var(--text2);
+  max-width: 42ch;
+  margin: 0 auto 2.5rem;
+  line-height: 1.65;
+}
+.cta-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  padding: 14px 32px;
+  background: var(--gold);
+  color: #0c0c0c;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--mono);
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-secondary {
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--text2);
+  font-size: 13px;
+  font-family: var(--mono);
+  border: 1px solid var(--border2);
+  border-radius: 40px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-secondary:hover { border-color: var(--border3); color: var(--text); }
+.btn-cta-primary { padding: 14px 32px; background: var(--gold); color: #0c0c0c; font-size: 13px; font-weight: 700; font-family: var(--mono); border: none; border-radius: 40px; cursor: pointer; text-decoration: none; transition: opacity 0.15s, transform 0.15s; display: inline-block; }
+.btn-cta-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-cta-secondary { padding: 13px 24px; background: transparent; color: var(--text2); font-size: 13px; font-family: var(--mono); border: 1px solid var(--border2); border-radius: 40px; cursor: pointer; text-decoration: none; transition: border-color 0.15s, color 0.15s; display: inline-block; }
+.btn-cta-secondary:hover { border-color: var(--border3); color: var(--text); }
+
+.cta-detail {
+  margin-top: 2.5rem;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+}
+
+/* ── SECTION TITLES ── */
+.sec-h2 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  height: 2px;
+  background: var(--gold);
+  z-index: 99;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .problem-grid { grid-template-columns: 1fr; }
+  .audience-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .flow-container { grid-template-columns: 1fr; }
+  .flow-arrow { display: none; }
+  .live-examples { grid-template-columns: 1fr; }
+  .trust-grid { grid-template-columns: 1fr; }
+  .tech-row { grid-template-columns: repeat(2, 1fr); }
+  .impact-row { grid-template-columns: 1fr; }
+}
+/* Contact modal */
+.contact-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.contact-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 36px 40px;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+}
+.contact-close {
+  position: absolute; top: 16px; right: 18px;
+  background: var(--bg4); border: 1px solid var(--border2); border-radius: 50%;
+  width: 30px; height: 30px; font-size: 16px; line-height: 1;
+  color: var(--text2); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s, color .15s;
+}
+.contact-close:hover { border-color: var(--gold); color: var(--gold); }
+.contact-eyebrow {
+  font-size: 10px; font-family: var(--mono);
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: .75rem;
+}
+.contact-name {
+  font-family: var(--serif); font-size: 1.9rem; font-weight: 300;
+  letter-spacing: -.025em; margin-bottom: 1.75rem;
+  color: var(--text);
+}
+.contact-rows { display: flex; flex-direction: column; gap: 12px; }
+.contact-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 10px; gap: 12px;
+}
+.contact-label {
+  font-size: 10px; font-family: var(--mono);
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text3); flex-shrink: 0;
+}
+.contact-value {
+  font-size: 13px; color: var(--text); font-family: var(--mono);
+  text-decoration: none; text-align: right;
+}
+a.contact-value:hover { color: var(--gold); text-decoration: underline; }
+.contact-row-label {
+  font-size: 10px; font-family: var(--mono);
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text3); flex-shrink: 0;
+}
+.contact-row-val {
+  font-size: 13px; color: var(--text); font-family: var(--mono);
+  text-decoration: none; text-align: right;
+}
+a.contact-row-val { color: var(--text); }
+a.contact-row-val:hover { color: var(--gold); text-decoration: underline; }
+.btn-contact {
+  padding: 7px 16px;
+  background: transparent;
+  color: var(--text2);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--mono);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-contact:hover { border-color: var(--gold); color: var(--gold); }
+@media (max-width: 640px) {
+  section { padding: 90px 1.25rem 60px; }
+  nav { padding: 0 1.25rem; }
+  .nav-links { display: none; }
+  .audience-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .uc-panels > div.active { grid-template-columns: 1fr; }
+}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+/* Language switcher */
+.lang-switcher {
+  display: flex; gap: 2px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 20px; padding: 3px;
+}
+.lang-btn {
+  padding: 4px 11px; border-radius: 16px; border: none;
+  background: transparent; color: var(--text3);
+  font-size: 10px; font-family: var(--mono); font-weight: 600;
+  letter-spacing: .04em; cursor: pointer;
+  transition: all .15s;
+}
+.lang-btn.active {
+  background: var(--bg); color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.lang-btn:not(.active):hover { color: var(--text2); }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progress"></div>
+
+<!-- Navigation -->
+<nav>
+  <a class="nav-logo" href="#">⌨ Keyboard Saver</a>
+  <ul class="nav-links">
+    <li><a href="#cover" class="active">Overview</a></li>
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#audience">Who It Helps</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#numbers">Impact</a></li>
+    <li><a href="#usecases">Use Cases</a></li>
+    <li><a href="#trust">Privacy & Tech</a></li>
+    <li><a href="#cta">Try It</a></li>
+  </ul>
+  <div class="nav-cta" style="display:flex;align-items:center;gap:8px">
+    <div class="lang-switcher" id="lang-switcher">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ar">عربي</button>
+      <button class="lang-btn" data-lang="ku">کوردی</button>
+    </div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <a class="btn-try" href="KeyboardSaver.html" target="_blank">Open App →</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════
+     SLIDE 1 · COVER
+══════════════════════════════ -->
+<section id="cover">
+  <div class="section-inner" style="text-align:center">
+    <div class="cover-kicker" data-i18n="cover.kicker">Keyboard Saver</div>
+    <div class="hero-typewriter-wrap">
+      <span class="hero-typer" id="hero-typer" dir="auto" aria-live="off"></span>
+    </div>
+    <p class="cover-sub">
+      A zero-install, browser-based tool that instantly recovers text
+      typed on the wrong keyboard language, between English, Arabic,
+      and Kurdish Sorani.
+    </p>
+    <div class="cover-meta">
+      <span class="cover-tag" data-i18n="cover.tag1">🌐 English · Arabic · Kurdish Sorani</span>
+      <span class="cover-tag" data-i18n="cover.tag2">🔒 No data stored · Zero install</span>
+      <span class="cover-tag" data-i18n="cover.tag3">⚡ Free · Works in any browser</span>
+    </div>
+  </div>
+  <div class="cover-scroll">SCROLL</div>
+</section>
+
+<!-- ══════════════════════════════
+     SLIDE 2 · THE PROBLEM
+══════════════════════════════ -->
+<section id="problem">
+  <div class="section-inner">
+    <div class="sec-label" data-i18n="problem.label">01 · The Problem</div>
+    <div class="problem-grid">
+      <div class="problem-text">
+        <h2 data-i18n="problem.h2">You typed in<br><em>the wrong language.</em><br>Again.</h2>
+        <p data-i18n="problem.p1">Multilingual workplaces switch keyboard layouts constantly. One moment you're writing an Arabic report, the next an English email, and Windows doesn't always know which one you mean.</p>
+        <p data-i18n="problem.p2">The result: a paragraph of gibberish that looks like <span style="color:var(--ar);direction:rtl;unicode-bidi:isolate">فاهس نثغلاخشقي هس صقخىل</span> when you meant to write <span style="color:var(--en)">"this keyboard is wrong"</span>.</p>
+        <p data-i18n="problem.p3">You either retype everything from scratch, or you paste it into Keyboard Saver and get the correct text in under a second.</p>
+      </div>
+      <div class="gibberish-demo">
+        <div class="demo-bar">
+          <div class="demo-dots">
+            <div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div>
+          </div>
+          <span class="demo-bar-label">Company Chat, Finance dept.</span>
+        </div>
+        <div class="demo-body">
+          <div class="demo-row">
+            <div class="demo-avatar">A</div>
+            <div>
+              <div class="demo-bubble gibberish">حمثشسث سثىي فاث قثحخقف</div>
+              <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px;padding-left:4px">← Arabic keyboard was active</div>
+            </div>
+          </div>
+          <div class="demo-row" style="margin-top:4px">
+            <div class="demo-avatar" style="background:var(--bg4);font-size:9px;color:var(--text3)">??</div>
+            <div class="demo-bubble" style="font-size:13px;color:var(--text2)">
+              Sorry, what does this say? 😅
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--border);margin:14px 0 12px;"></div>
+          <div style="font-size:10px;font-family:var(--mono);color:var(--text3);margin-bottom:8px;">After using Keyboard Saver:</div>
+          <div class="demo-row">
+            <div class="demo-avatar">A</div>
+            <div class="demo-bubble fixed">
+              please send the report
+              <small>recovered in &lt;1 second</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SLIDE 4 · HOW IT WORKS
+══════════════════════════════ -->
+<section id="how">
+  <div class="section-inner">
+    <div class="sec-label" data-i18n="how.label">02 · How It Works</div>
+    <h2 class="sec-h2" data-i18n="how.h2">Three steps.<br>Under a second.</h2>
+    <p class="how-intro" data-i18n="how.intro">Keyboard Saver maps every physical key on your keyboard to its Arabic and Kurdish equivalents, and the reverse. When you paste text that looks wrong, it detects the script mismatch and shows you what you actually meant to type.</p>
+
+    <div class="flow-container">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-icon">
+          <!-- Keyboard icon -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/>
+          </svg>
+        </div>
+        <div class="flow-label" data-i18n="flow1.label">Type or Paste</div>
+        <div class="flow-desc" data-i18n="flow1.desc">Drop in any text, even mid-sentence gibberish. No formatting needed.</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-icon">
+          <!-- Detect / scan icon -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="M16.5 16.5 21 21"/>
+            <path d="M11 8v6M8 11h6"/>
+          </svg>
+        </div>
+        <div class="flow-label" data-i18n="flow2.label">Auto-Detection</div>
+        <div class="flow-desc" data-i18n="flow2.desc">The tool identifies which language the keyboard was set to when you typed.</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-icon">
+          <!-- Output / copy icon -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </div>
+        <div class="flow-label" data-i18n="flow3.label">All Three Outputs</div>
+        <div class="flow-desc" data-i18n="flow3.desc">English, Arabic, and Kurdish Sorani, all shown at once. Copy the one you need.</div>
+      </div>
+    </div>
+
+    <div class="live-strip">
+      <div class="live-strip-header">
+        <div class="live-dot"></div>
+        <span class="live-strip-label" data-i18n="how.live.label">Live example: same input, three recovered outputs</span>
+      </div>
+      <div class="live-examples">
+        <div class="live-ex">
+          <div class="live-ex-label l-ar">You typed (Arabic keyboard active)</div>
+          <div class="live-ex-in" style="direction:rtl;text-align:right;font-size:16px;color:var(--ar)">فاهس نثغلاخشقي هس صقخىل</div>
+          <div class="live-ex-out" style="color:var(--text3);font-size:11px;margin-top:4px">← gibberish: keyboard was on Arabic</div>
+        </div>
+        <div class="live-ex">
+          <div class="live-ex-label l-en">Recovered → English</div>
+          <div class="live-ex-out">this keyboard is wrong</div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px">what you actually typed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SLIDE 5 · BY THE NUMBERS
+══════════════════════════════ -->
+<section id="numbers">
+  <div class="section-inner">
+    <div class="sec-label" data-i18n="numbers.label">03 · The Cost of Keyboard Confusion</div>
+    <h2 class="stats-headline" data-i18n="numbers.h2">A small friction.<br>Multiplied by<br>everyone, every day.</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" style="font-size:1.8rem;line-height:1.2">Happens daily</div>
+        <div class="stat-unit">for every bilingual employee</div>
+        <div class="stat-desc">Any employee who switches between English and Arabic or Kurdish multiple times a day will encounter this. It is not an edge case. It is routine.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="font-size:1.8rem;line-height:1.2">Breaks focus</div>
+        <div class="stat-unit">every time it happens</div>
+        <div class="stat-desc">Re-typing a message is not just a time cost. It interrupts the thought being communicated and adds frustration to the workday, especially under time pressure.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="font-size:1.8rem;line-height:1.2">Affects quality</div>
+        <div class="stat-unit">when the fix is rushed</div>
+        <div class="stat-desc">Hurried re-typing leads to spelling errors, incomplete messages, and content that was edited differently from the original, reducing communication quality.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">&lt; 1 sec</div>
+        <div class="stat-unit">to fix with Keyboard Saver</div>
+        <div class="stat-desc">Paste → detect → copy. No retyping, no explanation, no lost context. The only figure that doesn't need a study to prove.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SLIDE 7 · PRIVACY & TECH
+══════════════════════════════ -->
+<section id="trust">
+  <div class="section-inner">
+    <div class="sec-label" data-i18n="trust.label">04 · Privacy, Security & Deployment</div>
+    <h2 class="sec-h2" data-i18n="trust.h2">Nothing leaves<br>the browser.</h2>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="trust-title">Zero data transmission</div>
+        <div class="trust-desc">All conversion logic runs entirely inside the user’s browser. No text, no keystrokes, no metadata is sent to any server. Ever.</div>
+        <div class="trust-check">No backend, no API calls</div>
+        <div class="trust-check">No logging or analytics</div>
+        <div class="trust-check">No cookies or tracking</div>
+        <div class="trust-check">Safe for confidential documents</div>
+      </div>
+      <div class="trust-card">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+        <div class="trust-title">Zero setup for users</div>
+        <div class="trust-desc">One URL. No installation, no account, no IT ticket. Open in any browser on any device and it works immediately.</div>
+        <div class="trust-check">Works on Windows, macOS, iOS, Android</div>
+        <div class="trust-check">No plugins or extensions required</div>
+        <div class="trust-check">No admin rights needed</div>
+        <div class="trust-check">Works in any modern browser</div>
+      </div>
+      <div class="trust-card">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <div class="trust-title">Simple deployment</div>
+        <div class="trust-desc">A single HTML file. Can be hosted internally on any web server, intranet, SharePoint, or served from a CDN. No dependencies, no build process.</div>
+        <div class="trust-check">Single file: KeyboardSaver.html</div>
+        <div class="trust-check">Works offline after first load</div>
+        <div class="trust-check">IT-controllable hosting</div>
+        <div class="trust-check">Customisable branding</div>
+      </div>
+    </div>
+    <div class="tech-row">
+      <div class="tech-pill">
+        <div class="tech-pill-label">Languages</div>
+        <div class="tech-pill-val">English · Arabic · Kurdish Sorani</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-label">Keyboard Layouts</div>
+        <div class="tech-pill-val">QWERTY · Arabic Windows · Kurdish Sorani Windows</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-label">File Size</div>
+        <div class="tech-pill-val">~75 KB · single HTML file</div>
+      </div>
+      <div class="tech-pill">
+        <div class="tech-pill-label">Dependencies</div>
+        <div class="tech-pill-val">None · 100% vanilla</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SLIDE 8 · CALL TO ACTION
+══════════════════════════════ -->
+<section id="cta">
+  <div class="section-inner" style="text-align:center">
+    <div class="sec-label">05 · Try It Now</div>
+    <h2 class="sec-h2">Ready to use.<br>No install required.</h2>
+    <p class="cta-sub">Open the tool directly or reach out to the developer to discuss deploying it on your company intranet.</p>
+    <div class="cta-btns">
+      <a class="btn-cta-primary" href="KeyboardSaver.html" target="_blank">Open Keyboard Saver &#x2192;</a>
+      <button class="btn-cta-secondary" onclick="openContact()">Contact Developer</button>
+    </div>
+    <p class="cta-detail">Available now. Host it on any internal server, SharePoint, or CDN. Works in any modern browser. No data sent externally.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     CONTACT MODAL
+══════════════════════════════ -->
+<div class="contact-overlay" id="contact-modal" style="display:none" onclick="handleOverlayClick(event)">
+  <div class="contact-card">
+    <div class="contact-eyebrow">Developer Contact</div>
+    <h3 class="contact-name">Seever .S</h3>
+    <div class="contact-rows">
+      <div class="contact-row">
+        <span class="contact-row-label">Personal Email</span>
+        <a class="contact-row-val" href="mailto:s.h.seever@gmail.com">s.h.seever@gmail.com</a>
+      </div>
+    </div>
+    <button class="contact-close" onclick="closeContact()">Close</button>
+  </div>
+</div>
+<script>
+const T = {
+  en: {
+    'cover.kicker':'Keyboard Saver',
+    'cover.sub':'A zero-install, browser-based tool that instantly recovers text typed on the wrong keyboard language, between English, Arabic, and Kurdish Sorani.',
+    'cover.tag1':'🌐 English · Arabic · Kurdish Sorani',
+    'cover.tag2':'🔒 No data stored · Zero install',
+    'cover.tag3':'⚡ Free · Works in any browser',
+    'nav.overview':'Overview','nav.problem':'The Problem','nav.audience':'Who It Helps','nav.how':'How It Works','nav.numbers':'Impact','nav.usecases':'Use Cases','nav.trust':'Privacy & Tech','nav.cta':'Try It','nav.try':'Open App →',
+    'problem.label':'01 · The Problem',
+    'problem.h2':'You typed in<br><em>the wrong language.</em><br>Again.',
+    'problem.p1':"Multilingual workplaces switch keyboard layouts constantly. One moment you're writing an Arabic report, the next an English email, and Windows doesn't always know which one you mean.",
+    'problem.p2':'The result: a paragraph of gibberish that looks like <span style="color:var(--ar);direction:rtl;unicode-bidi:isolate">فاهس نثغلاخشقي هس صقخىل</span> when you meant to write <span style="color:var(--en)">&ldquo;this keyboard is wrong&rdquo;</span>.',
+    'problem.p3':'You either retype everything from scratch, or you paste it into Keyboard Saver and get the correct text in under a second.',
+    'how.label':'02 · How It Works',
+    'how.h2':'Three steps.<br>Under a second.',
+    'how.intro':'Keyboard Saver maps every physical key on your keyboard to its Arabic and Kurdish equivalents, and the reverse. When you paste text that looks wrong, it detects the script mismatch and shows you what you actually meant to type.',
+    'flow1.label':'Type or Paste','flow1.desc':'Drop in any text, even mid-sentence gibberish. No formatting needed.',
+    'flow2.label':'Auto-Detection','flow2.desc':'The tool identifies which language the keyboard was set to when you typed.',
+    'flow3.label':'All Three Outputs','flow3.desc':'English, Arabic, and Kurdish Sorani, all shown at once. Copy the one you need.',
+    'how.live.label':'Live example: Arabic keyboard active, user intended English',
+    'numbers.label':'04 · The Cost of Keyboard Confusion',
+    'numbers.h2':'A small friction.<br>Multiplied by<br>everyone, every day.',
+    'aud1.desc':"Agents switch layouts mid-conversation, often mid-sentence. A customer is on hold; the response is in the wrong script. Keyboard Saver recovers it in under a second.",
+    'aud1.quote':'"I need to fix this now, not retype it."',
+    'aud2.desc':'Incident reports, tickets, and handover notes that end up in the wrong script get corrected instantly, not retyped.',
+    'aud2.quote':'"I typed the whole summary in the wrong language. This fixes it before I send."',
+    'aud3.desc':'Quick replies drafted in Arabic with English-layout fingers are a daily occurrence. Recover them before they reach the board.',
+    'aud3.quote':'"Sent an Arabic-looking mess to the board. Never again."',
+    'aud4.desc':'Staff communications arrive in Arabic, Kurdish, and English. One wrong keyboard switch should not mean starting the whole message over.',
+    'aud4.quote':'"Letters, contracts, announcements. All need both scripts."',
+    'aud5.desc':'Tickets submitted on the wrong keyboard arrive as unreadable text. Keyboard Saver decodes them so the issue can be understood and actioned without a follow-up call.',
+    'aud5.quote':'"User submits a ticket full of Arabic chars, but meant English commands."',
+    'aud6.desc':'Names and notes entered in the wrong script create duplicate records. Catching the mismatch before submission is cheaper than cleaning it up after.',
+    'aud6.quote':'"A name in the wrong script takes hours to merge later."',
+    'stat1.num':'Happens daily','stat1.unit':'for every bilingual employee','stat1.desc':'Any employee who switches between English and Arabic or Kurdish multiple times a day will encounter this. It is not an edge case. It is routine.',
+    'stat2.num':'Breaks focus','stat2.unit':'every time it happens','stat2.desc':'Re-typing a message is not just a time cost. It interrupts the thought being communicated and adds frustration to the workday, especially under time pressure.',
+    'stat3.num':'Affects quality','stat3.unit':'when the fix is rushed','stat3.desc':'Hurried re-typing leads to spelling errors, incomplete messages, and content edited differently from the original, reducing communication quality.',
+    'stat4.num':'< 1 sec','stat4.unit':'to fix with Keyboard Saver','stat4.desc':'Paste → detect → copy. No retyping, no explanation, no lost context. The only figure that does not need a study to prove.',
+    'uc.tab1':'English keyboard active, typed Arabic','uc.tab2':'Arabic keyboard active, typed English','uc.tab3':'Kurdish keyboard active, typed English',
+    'p1.label':'Use Case 01','p1.title':'English keyboard was active: you were trying to type Arabic',
+    'p1.desc1':'You are composing an Arabic message but the OS is still on the English layout. Every key you press produces an English character instead of the Arabic one.',
+    'p1.ba.before':'What appeared on screen (English layout was active)','p1.ba.after':'Arabic recovered: what the user actually intended',
+    'p2.label':'Use Case 02','p2.title':'Arabic keyboard was active: you were trying to type English',
+    'p2.desc1':'The most common scenario in multilingual offices. After typing an Arabic message, the keyboard stays on the Arabic layout.',
+    'p2.ba.before':'What appeared on screen (Arabic layout was active)','p2.ba.after':'English recovered: what the user actually typed',
+    'p3.label':'Use Case 03','p3.title':'Kurdish keyboard was active: you were trying to type English',
+    'p3.desc1':'The Kurdish Sorani layout maps keys to completely different positions from QWERTY. An English sentence typed while Kurdish layout is active produces Kurdish-looking characters.',
+    'p3.ba.before':'What appeared on screen (Kurdish layout was active)','p3.ba.after':'English recovered: what the user actually typed',
+    'trust.label':'06 · Privacy, Security & Deployment',
+    'trust.h2':'Nothing leaves<br>the browser.',
+    'trust1.title':'Zero data transmission','trust1.desc':"All conversion logic runs entirely inside the user's browser. No text, no keystrokes, no metadata is sent to any server. Ever.",
+    'trust2.title':'Zero setup for users','trust2.desc':'One URL. No installation, no account, no IT ticket. Open in any browser on any device and it works immediately.',
+    'trust3.title':'Simple deployment','trust3.desc':'A single HTML file. Can be hosted internally on any web server, intranet, SharePoint, or served from a CDN. No dependencies, no build process.',
+    'tech.lang.label':'Languages','tech.lang.val':'English · Arabic · Kurdish Sorani',
+    'tech.layouts.label':'Keyboard Layouts','tech.layouts.val':'QWERTY · Arabic Windows · Kurdish Sorani Windows',
+    'tech.size.label':'File Size','tech.size.val':'~75 KB · single HTML file',
+    'tech.deps.label':'Dependencies','tech.deps.val':'None · 100% vanilla',
+    'cta.eyebrow':'07 · Try It Now','cta.h2':'Ready to use.<br>No install required.',
+    'cta.sub':'Open the tool directly or reach out to the developer to discuss deploying it on your company intranet.',
+    'cta1':'Open Keyboard Saver →','cta3':'Contact Developer',
+    'cta.detail':'Host it on any internal server, SharePoint, or CDN. Works in any modern browser. No data sent externally.',
+    'contact.eyebrow':'Developer Contact','contact.label.work_email':'Work Email','contact.label.personal_email':'Personal Email','contact.label.id':'Employee ID','contact.label.work_phone':'Work Phone','contact.label.personal_phone':'Personal Phone','contact.close':'Close',
+  },
+  ar: {
+    'cover.kicker':'عرض توضيحي',
+    'cover.sub':'لتصحيح النصوص المكتوبة بـ لغة لوحة مفاتيح خاطئة تلقائياً.',
+    'cover.tag1':'🌐 الإنكليزية · العربية · الكوردية السورانية',
+    'cover.tag2':'🔒 لا يتم حفظ أي بيانات',
+    'cover.tag3':'⚡ جاهز للاستخدام دون تثبيت',
+    'nav.overview':'نظرة عامة','nav.problem':'المشكلة','nav.audience':'الفئات المستفيدة','nav.how':'آلية العمل','nav.numbers':'الأثر المترتب','nav.usecases':'حالات الاستخدام','nav.trust':'الخصوصية والجانب التقني','nav.cta':'جربه الآن','nav.try':'افتح التطبيق ←',
+    'problem.label':'٠١ · المشكلة',
+    'problem.h2':'كتبت بـاللغة الخاطئة مرة أخرى؟',
+    'problem.p1':'في بيئات العمل متعددة اللغات، نُبدّل بين لغات لوحة المفاتيح باستمرار. قد تكتب تقريراً بالعربية في لحظة، ثم بريداً إلكترونياً بالإنكليزية في اللحظة التالية ونظام التشغيل لا يدرك دائماً ما اللغة التي تقصد استخدامه.',
+    'problem.p2':'مثلاً، تكتب: <span style="color:var(--ar);font-family:var(--mono)">÷ ؤشىطف بهىي فاث شففشؤاةثىفو ؤشى غخع قثسثىف فاث ثةشهم حمثشسث؟</span><br>بينما كنت تقصد كتابة: <span style="color:var(--en)">I cannot find the attachment, can you resend the email please?</span>',
+    'problem.p3':'وتضطر لحذف كل ما كتبته، و تعيد كتابة النص يدوياً من جديد.<br>أو تقوم بلصق النص هنا و إستعادة رسالتك بشكل صحيح في أقل من ثانية.',
+    'how.label':'٠٢ · آلية العمل',
+    'how.h2':'ثلاث خطوات<br>في أقل من ثانية.',
+    'how.intro':'تقوم هذه الأداة بربط كل مفتاح فعلي بما يقابله في العربية والكوردية، وبالعكس. عندما تلصق نصاً غير مفهوم، تكتشف الأداة عدم التطابق وتعرض لك ما قصدت كتابته فعلاً.<br><br>تعمل هذه الأداة كطبقة تحويل واضحة ومقصودة؛ فهو لا يثبّت برامج غامضة بالنظام، ولا يسجل النقرات الخلفية، ولا يغير معايير نظام التشغيل الافتراضية. إنه يتعامل مع تصحيح اللغة كخدمة مستقلة ومباشرة.<br><br>عندما يلاحظ الموظف خطأً في لغة الكتابة، لا يحتاج لمسحه. بل يمرره عبر الأداة لاستعادة الحروف الصحيحة بدقة، حرفاً بحرف.',
+    'flow1.label':'اكتب أو الصق النص','flow1.desc':'ضع أي نص مكتوب باللغة الخاطئة هنا مباشرة',
+    'flow2.label':'تعرف تلقائي','flow2.desc':'تحدد الأداة بدقة لغة لوحة المفاتيح التي كنت تستخدمها أثناء الكتابة.',
+    'flow3.label':'الرجوع السلس للعمل','flow3.desc':'تظهر لك النتائج بالإنكليزية، العربية، والكوردية السورانية في نفس الوقت. فقط انسخ ما تحتاجه ليصبح جاهزاً للصقه مباشرة.',
+    'how.live.label':'مثال حي: لوحة المفاتيح كانت عربية، والمستخدم قصد الكتابة بالإنكليزية',
+    'numbers.label':'٠٣ · تكلفة أخطاء لوحة المفاتيح',
+    'numbers.h2':'عقبة تتكرر مع الجميع.',
+    'aud1.desc':'يتنقل الموظفون بين تخطيطات لوحة المفاتيح أثناء المحادثات، وغالباً في منتصف الجملة.',
+    'aud1.quote':'"أحتاج إلى إصلاح هذا الخطأ الآن بدلاً من إعادة كتابته."',
+    'aud2.desc':'تقارير الحوادث، التذاكر، والملاحظات المتبادلة التي تُكتب بالخطأ بلغة أخرى يتم تصحيحها فوراً.',
+    'aud2.quote':'"لقد كتبت الملخص بالكامل بلغة خاطئة، تفيدني هذه الأداة في إصلاحه قبل الإرسال."',
+    'aud3.desc':'الردود السريعة التي تُكتب باللغة العربية بأصابع معتادة على التخطيط الإنجليزي هي أمر يتكرر يومياً.',
+    'aud3.quote':'"أرسلت نصاً مبهماً يشبه العربية إلى مجلس الإدارة. لن يتكرر هذا الخطأ مجدداً."',
+    'aud4.desc':'تصل اتصالات الموظفين باللغات العربية والكوردية والإنجليزية. ولا ينبغي أن يعني الخطأ في تبديل لغة لوحة المفاتيح إعادة كتابة الرسالة.',
+    'aud4.quote':'"الخطابات والعقود والإعلانات؛ كلها تتطلب الكتابة بكلا التخطيطين."',
+    'aud5.desc':'التذاكر المرسلة بلغة لوحة مفاتيح خاطئة تظهر كنصوص غير مقروءة. يقوم Keyboard Saver بفك شفرتها.',
+    'aud5.quote':'"يرسل المستخدم تذكرة مليئة بالحروف العربية، بينما كان يقصد إدخال أوامر بالإنجليزية."',
+    'aud6.desc':'إدخال الأسماء والملاحظات بلغة خاطئة يتسبب في تكرار السجلات. تدارك هذا التضارب قبل الإرسال يوفر تكلفة التنظيف لاحقاً.',
+    'aud6.quote':'"إدخال الاسم بتخطيط خاطئ يستغرق ساعات لدمج البيانات لاحقاً."',
+    'stat1.num':'يحدث يومياً','stat1.unit':'لكل موظف يكتب بعدة لغات:','stat1.desc':'أي موظف يبدّل بين الإنجليزية والعربية و الكوردية عدة مرات في اليوم سيواجه هذا الخطأ حتماً. إنها ليست حالة نادرة بل روتين متكرر.',
+    'stat2.num':'يشتت الانتباه','stat2.unit':'في كل مرة يحدث فيها','stat2.desc':'إعادة كتابة الرسالة لا تستهلك الوقت فحسب، بل تقطع سلسلة حبل الأفكار وتضيف إحباطاً ليوم العمل، خاصة تحت ضغط الوقت وتراكم المهام.',
+    'stat3.num':'يؤثر على الجودة','stat3.unit':'عند التصحيح المستعجل','stat3.desc':'إعادة الكتابة على عجل تؤدي غالباً لأخطاء إملائية، ورسائل غير مكتملة، وصياغة مشوهة تختلف عن الفكرة الأصلية مما يقلل جودة التواصل الاحترافي.',
+    'stat4.num':'في أقل من ثانية','stat4.unit':'يتم التصحيح عبر هذا التطبيق','stat4.desc':'الصق ← تعرّف ← انسخ. لا إعادة كتابة، ولا تفسير، ولا فقدان للسياق العام.',
+    'uc.tab1':'لوحة المفاتيح الإنجليزية مفعّلة، والمقصود الكتابة بالعربية','uc.tab2':'لوحة المفاتيح العربية مفعّلة، والمقصود الكتابة بالإنجليزية','uc.tab3':'لوحة المفاتيح الكوردية مفعّلة، والمقصود الكتابة بالإنجليزية',
+    'p1.label':'حالة الاستخدام ٠١','p1.title':'لوحة المفاتيح الإنجليزية كانت مفعّلة: بينما كنت تحاول الكتابة بالعربية',
+    'p1.desc1':'تقوم بصياغة رسالة باللغة العربية ولكن نظام التشغيل لا يزال مضبوطاً على تخطيط اللغة الإنجليزية.',
+    'p1.ba.before':'ما ظهر على الشاشة (التخطيط الإنجليزي كان مفعّلاً)','p1.ba.after':'النص العربي المسترد: ما قصده المستخدم بالفعل',
+    'p2.label':'حالة الاستخدام ٠٢','p2.title':'لوحة المفاتيح العربية كانت مفعّلة: بينما كنت تحاول الكتابة بالإنجليزية',
+    'p2.desc1':'السيناريو الأكثر شيوعاً في المكاتب متعددة اللغات. بعد كتابة رسالة بالعربية، تظل لوحة المفاتيح على التخطيط العربي.',
+    'p2.ba.before':'ما ظهر على الشاشة (التخطيط العربي كان مفعّلاً)','p2.ba.after':'النص الإنجليزي المسترد: ما كتبه المستخدم بالفعل',
+    'p3.label':'حالة الاستخدام ٠٣','p3.title':'لوحة المفاتيح الكوردية كانت مفعّلة: بينما كنت تحاول الكتابة بالإنجليزية',
+    'p3.desc1':'يوزع تخطيط اللغة الكوردية السورانية المفاتيح في مواضع مختلفة تماماً عن لوحة QWERTY.',
+    'p3.ba.before':'ما ظهر على الشاشة (التخطيط الكوردي كان مفعّلاً)','p3.ba.after':'النص الإنجليزي المسترد: ما كتبه المستخدم بالفعل',
+    'trust.label':'٠٤ · الخصوصية، الأمان، والتشغيل',
+    'trust.h2':'لا شيء يغادر متصفحك.',
+    'trust1.title':'عدم نقل أي بيانات','trust1.desc':'تتم جميع عمليات ومنطق التحويل برمتها محلياً داخل متصفح المستخدم. لا يتم إرسال أي نصوص، أو ضغطات أزرار، أو بيانات إلى أي خادم خارجي على الإطلاق.',
+    'trust2.title':'لا يتطلب أي إعداد من المستخدمين','trust2.desc':'رابط ويب واحد وكافٍ. بدون عمليات تثبيت معقدة، وبدون إنشاء حسابات، أو تذاكر الدعم. افتحه في أي متصفح ومن أي جهاز وسيعمل فوراً.',
+    'trust3.title':'نشر وبث سريع وبسيط','trust3.desc':'ملف HTML واحد مستقل. يمكن استضافته داخلياً على أي خادم ويب للمؤسسة، أو شبكة داخلية (Intranet)، أو SharePoint، أو عبر شبكة توزيع محتوى (CDN). بدون تبعيات أو عمليات بناء معقدة.',
+    'trust4.title':'ربط مع ليث، مساعد الذكاء الاصطناعي لموظفي خدمة العملاء','trust4.desc':'يمكن دمج خوارزمية ومنطق هذه الآداة مباشرة في ليث. بدلاً من مطالبة الموظفين بتصحيح مدخلاتهم يدوياً قبل إرسال الاستفسار، يستطيع ليث اكتشاف وتصحيح النص المكتوب بلغة خاطئة تلقائياً قبل معالجته مما يجعل كل تفاعل أكثر سلاسة وسرعة للموظفين مع المشتركين.',
+    'tech.lang.label':'اللغات المدعومة','tech.lang.val':'الإنكليزية · العربية · الكوردية السورانية',
+    'tech.layouts.label':'تخطيطات المفاتيح','tech.layouts.val':'QWERTY · ويندوز عربي · ويندوز كردي سوراني',
+    'tech.size.label':'حجم الملف التابع','tech.size.val':'~٧٥ كيلوبايت · ملف HTML واحد ومستقل',
+    'tech.deps.label':'التبعيّات البرمجية','tech.deps.val':'لا يوجد · ١٠٠٪ كود أصلي نقي (Vanilla JS)',
+    'cta.eyebrow':'٠٥ · جربه الآن','cta.h2':'جاهز للتجربة؟<br>افتح الأداة.<br>الصق أي شيء.<br>وشاهد بنفسك.',
+    'cta.sub':'لا تسجيل. لا تثبيت. ولا حاجة لأي شرح. فقط الصق النص الخاطئ وشاهده يُصحح نفسه.',
+    'cta1':'افتح Keyboard Saver ←','cta3':'تواصل مع المطور',
+    'cta.detail':'هل لديك أسئلة حول تشغيل الأداة أو دمجها؟ استخدم زر التواصل أعلاه.',
+    'contact.eyebrow':'Developer Contact','contact.label.work_email':'Work Email','contact.label.personal_email':'Personal Email','contact.label.id':'Employee ID','contact.label.work_phone':'Work Phone','contact.label.personal_phone':'Personal Phone','contact.close':'Close',
+  },
+  ku: {
+    'cover.kicker':'پێشکەشکردنی ڕوونکردنەوەیی',
+    'cover.sub':'ڕاستکردنەوەی خۆکاری ئەو دەقانەی بە زمانی هەڵەی کیبۆرد نووسراون.',
+    'cover.tag1':'🌐 ئینگلیزی · عەرەبی · کوردیی سۆرانی',
+    'cover.tag2':'🔒 هیچ زانیارییەک پاشەکەوت ناکرێت',
+    'cover.tag3':'⚡ ئامادەیە بۆ بەکارهێنان بەبێ دامەزراندن',
+    'nav.overview':'پێداچوونەوەی گشتی','nav.problem':'کێشەکە','nav.audience':'کێ سوودمەند دەبێت','nav.how':'چۆنیەتی کارکردن','nav.numbers':'کاریگەری','nav.usecases':'نموونەکانی بەکارهێنان','nav.trust':'پاراستنی زانیاری و تەکنەلۆجیا','nav.cta':'تاقیکردنەوە','nav.try':'کردنەوەی ئەپەکە ←',
+    'problem.label':'٠١ · کێشەکە',
+    'problem.h2':'دیسانەوە بە زمانی هەڵە نووسیت؟',
+    'problem.p1':'لە ژینگەکانی کاری فرەزماندا، بەردەوام زمانی کیبۆرد دەگۆڕین. لەوانەیە ساتێک ڕاپۆرتێک بە عەرەبی بنووسیت و ساتی دواتر ئیمەیڵێک بە ئینگلیزی، بەڵام سیستەمی کارپێکردن هەمیشە تێناگات مەبەستت بەکارهێنانی چ زمانێکە.',
+    'problem.p2':'بۆ نموونە، دەنووسیت: <span style="color:var(--ar);font-family:var(--mono)">÷ ؤشىطف بهىي فاث شففشؤاةثىفو ؤشى غخع قثسثىف فاث ثةشهم حمثشسث؟</span><br>لە کاتێکدا مەبەستت بووە بنووسیت: <span style="color:var(--en)">I cannot find the attachment, can you resend the email please?</span>',
+    'problem.p3':'ناچار دەبیت هەموو ئەوەی نووسیوتە بیسڕیتەوە، و سەرلەنوێ دەقەکە بە دەست بنووسیتەوە.<br>یان دەتوانیت دەقەکە لێرە دابنێیت (پەیست بکەیت) و لە کەمتر لە چرکەیەکدا نامەکەت بە دروستی بەدەست بهێنیتەوە.',
+    'how.label':'٠٢ · چۆنیەتی کارکردن',
+    'how.h2':'سێ هەنگاو.<br>لە کەمتر لە چرکەیەکدا.',
+    'how.intro':'کاتێک دەقێکی تێکەڵاو و بێمانا دادەنێیت، ئەم ئامرازە نەگونجانەکە دەزابێت و ئەوەت پیشان دەداتەوە کە لە ڕاستیدا مەبەستت بووە بینووسیت.<br><br>ئەم ئامرازە وەک چینێکی وەرگێڕانی ڕوون و مەبەستدار کار دەکات؛ هیچ پرۆگرامێکی نادیار لەسەر سیستەمەکە دانامەزرێنێت، کرتەکانی کیبۆرد لە پاشبنەمادا تۆمار ناکات، و دەستکاری ڕێکخستنە بنەڕەتییەکانی سیستەم ناکات. بەڵکو وەک خزمەتگوزارییەکی سەربەخۆ و ڕاستەوخۆ مامەڵە لەگەڵ ڕاستکردنەوەی زمانەکە دەکات.<br><br>کاتێک فەرمانبەرێک تێبینی هەڵەیەک لە زمانی نووسینەکەیدا دەکات، پێویست ناکات بیسڕێتەوە. تەنها دەقەکە دەخاتە ناو ئامرازەکەوە بۆ گەڕاندنەوەی پیتە دروستەکان بەوردی، پیت بە پیت.',
+    'flow1.label':'بنووسە یان دەقەکە دابنێ (پەیست بکە)','flow1.desc':'ڕاستەوخۆ هەر دەقێک کە بە زمانی هەڵە نووسراوە لێرە دایبنێ.',
+    'flow2.label':'ناسینەوەی خۆکار','flow2.desc':'ئامرازەکە بەوردی ئەو زمانی کیبۆردە دەستنیشان دەکات کە لە کاتی نووسیندا بەکارت هێناوە.',
+    'flow3.label':'گەڕانەوەی ڕاستەوخۆ بۆ سەر کار','flow3.desc':'ئەنجامەکان بە ئینگلیزی، عەرەبی و کوردیی سۆرانی لە یەک کاتدا پیشان دەدرێن. تەنها ئەوە کۆپی بکە کە پێویستتە بۆ ئەوەی ئامادە بێت بۆ بەکارهێنان و دانانی (پەیستکردنی) بە ڕاستەوخۆی.',
+    'how.live.label':'نموونەی ڕاستەوخۆ: کیبۆردەکە لەسەر عەرەبی بووە، بەڵام بەکارهێنەر مەبەستی بووە بە ئینگلیزی بنووسێت',
+    'numbers.label':'٠٣ · تێچووی هەڵەکانی کیبۆرد',
+    'numbers.h2':'کێشەیەک کە لای هەمووان، ڕۆژانە دووبارە دەبێتەوە.',
+    'aud1.desc':'کارمەندەکان لە ناوەڕاستی گفتوگۆکاندا زمانی کیبۆرد دەگۆڕن. کڕیارەکە چاوەڕوانە؛ وەڵامەکە بە ڕێنووسێکی هەڵە نووسراوە.',
+    'aud1.quote':'"پێویستم بەوەیە ئێستا ئەمە چاک بکەم نەک دووبارە بینووسمەوە."',
+    'aud2.desc':'ڕاپۆرتی ڕووداوەکان، تیکتەکان و تێبینییەکانی ڕادەستکردن کە بە زمانی هەڵە دەنووسرێن، دەستبەجێ چاکدەکرێنەوە.',
+    'aud2.quote':'"هەموو کورتەی بابەتەکەم بە زمانێکی هەڵە نووسی. ئەم ئامرازە پێش ناردنی چاکی دەکاتەوە."',
+    'aud3.desc':'وەڵامە خێراکان کە بە زمانی عەرەبی بەڵام بە کیبۆردی ئینگلیزی دەنووسرێن، دیاردەیەکی ڕۆژانەیە.',
+    'aud3.quote':'"دەقێکی تێکەڵاوم نارد بۆ ئەنجومەنی کارگێڕی. هەرگیز ئەمە دووبارە نابێتەوە."',
+    'aud4.desc':'پەیوەندییەکانی کارمەندان بە زمانەکانی عەرەبی، کوردی و ئینگلیزی دەگەن. یەک گۆڕینی هەڵەی کیبۆرد نابێت ببێتە هۆی دووبارە نووسینی تەواوی نامەکە.',
+    'aud4.quote':'"نامەکان، گرێبەستەکان و ڕاگەیاندنەکان؛ هەموویان پێویستیان بە هەردوو ڕێنووسەکە هەیە."',
+    'aud5.desc':'ئەو تیکتانەی بە کیبۆردی هەڵە دەنێردرێن، وەک دەقێکی نەخوێندراوە دەگەن. Keyboard Saver کۆدەکەیان دەشیکاتەوە.',
+    'aud5.quote':'"بەکارهێنەر تیکتێک دەنێرێت کە پڕە لە پیتی عەرەبی، بەڵام مەبەستی فەرمانە ئینگلیزییەکان بووە."',
+    'aud6.desc':'ئەو ناو و تێبینییانەی بە ڕێنووسی هەڵە تۆماردەکرێن، تۆماری دووبارە دروست دەکەن. دۆزینەوەی ئەم ناڕێکییە پێش ناردن تێچووی کەمترە.',
+    'aud6.quote':'"تۆمارکردنی ناوێک بە ڕێنووسێکی هەڵە، پاشان چەندین کاتژمێری دەوێت بۆ چاككردن."',
+    'stat1.num':'ڕۆژانە ڕوودەدات','stat1.unit':'بۆ هەر کارمەندێک کە بە چەند زمانێک دەنووسێت:','stat1.desc':'هەر کارمەندێک کە لە ڕۆژێکدا چەندین جار لە نێوان ئینگلیزی، عەرەبی و کوردیدا زمان دەگۆڕێت، بێگومان تووشی ئەم هەڵەیە دەبێت. ئەمە حاڵەتێکی دەگمەن نییە، بەڵکو ڕۆتینێکی دووبارەبووەوەیە.',
+    'stat2.num':'تەرکیز تێکدەدات','stat2.unit':'هەموو جارێک کە ڕوودەدات','stat2.desc':'دووبارە نووسینەوەی نامەیەک تەنها کات ناگرێت، بەڵکو زنجیرەی بیرکردنەوە دەپچڕێنێت و بێزاری بۆ ڕۆژی کارکردن زیاد دەکات، بەتایبەتی لەژێر پەستانی کات و کەڵەکەبوونی کارەکاندا.',
+    'stat3.num':'کاریگەری لەسەر کوالێتی هەیە','stat3.unit':'لە کاتی چاككردنەوەی بەپەلەدا','stat3.desc':'دووبارە نووسینەوە بە پەلە زۆرجار دەبێتە هۆی هەڵەی ڕێنووسی، نامەی ناتەواو، و داڕشتنێکی شێواو کە جیاوازە لە بیرۆکە بنەڕەتییەکە، ئەمەش کوالێتی پەیوەندییە پیشەییەکان کەمدەکاتەوە.',
+    'stat4.num':'لە کەمتر لە چرکەیەکدا','stat4.unit':'ڕاستکردنەوەکە لە ڕێگەی ئەم ئەپەوە دەکرێت','stat4.desc':'دایبنێ (پەیست) ← دەیناسێتەوە ← کۆپی بکە. بێ دووبارە نووسینەوە، بێ ڕوونکردنەوە، و بێ لەدەستدانی مەبەستی گشتیی دەقەکە.',
+    'uc.tab1':'کیبۆردی ئینگلیزی چالاکە، بەڵام ویستووتە بە عەرەبی بنووسیت','uc.tab2':'کیبۆردی عەرەبی چالاکە، بەڵام ویستووتە بە ئینگلیزی بنووسیت','uc.tab3':'کیبۆردی کوردی چالاکە، بەڵام ویستووتە بە ئینگلیزی بنووسیت',
+    'p1.label':'نموونەی بەکارهێنانی ٠١','p1.title':'کیبۆردی ئینگلیزی چالاک بووە: لە کاتێکدا ویستووتە بە زمانی عەرەبی بنووسیت',
+    'p1.desc1':'خەریکی نووسینی نامەیەکی عەرەبیت بەڵام سیستەمی کارپێکردن هێشتا لەسەر زمانی ئینگلیزییە.',
+    'p1.ba.before':'ئەوەی لەسەر شاشە دەرکەوت (کیبۆردی ئینگلیزی چالاک بوو)','p1.ba.after':'دەقی عەرەبی چاككراو: ئەوەی بەکارهێنەر لە ڕاستیدا مەبەستی بووە',
+    'p2.label':'نموونەی بەکارهێنانی ٠٢','p2.title':'کیبۆردی عەرەبی چالاک بووە: لە کاتێکدا ویستووتە بە زمانی ئینگلیزی بنووسیت',
+    'p2.desc1':'باوترین دۆخە لە نووسینگە فرەزمانەکاندا. دوای نووسینی نامەیەکی عەرەبی، کیبۆردەکە لەسەر زمانی عەرەبی دەمێنێتەوە.',
+    'p2.ba.before':'ئەوەی لەسەر شاشە دەرکەوت (کیبۆردی عەرەبی چالاک بوو)','p2.ba.after':'دەقی ئینگلیزی چاككراو: ئەوەی بەکارهێنەر لە ڕاستیدا نووسیویەتی',
+    'p3.label':'نموونەی بەکارهێنانی ٠٣','p3.title':'کیبۆردی کوردی چالاک بووە: لە کاتێکدا ویستووتە بە زمانی ئینگلیزی بنووسیت',
+    'p3.desc1':'دابەشکردنی کلیلەکان لە کیبۆردی کوردیی سۆرانیدا بە تەواوی لە شوێنی جیاوازدایە بە بەراورد بە QWERTY.',
+    'p3.ba.before':'ئەوەی لەسەر شاشە دەرکەوت (کیبۆردی کوردی چالاک بوو)','p3.ba.after':'دەقی ئینگلیزی چاككراو: ئەوەی بەکارهێنەر لە ڕاستیدا نووسیویەتی',
+    'trust.label':'٠٤ · پاراستنی زانیارییەکان، ئاسایش و کارپێکردن',
+    'trust.h2':'هیچ شتێک وێبگەڕەکەت (Browser) جێناهێڵێت.',
+    'trust1.title':'گواستنەوەی هیچ جۆرە داتایەک ناکات','trust1.desc':'هەموو پرۆسە و لۆژیکی گۆڕینەکە بە تەواوی و لە ناوخۆی وێبگەڕی بەکارهێنەردا ئەنجام دەدرێت. هیچ دەقێک، داگرتنی کلیلێک، یان زانیارییەک بۆ هیچ سێرڤەرێکی دەرەکی نانێردرێت.',
+    'trust2.title':'پێویستی بە هیچ ڕێکخستنێک نییە لەلایەن بەکارهێنەرانەوە','trust2.desc':'تەنها بەستەرێکی وێب بەسە. بەبێ پرۆسەی دامەزراندنی ئاڵۆز، و بەبێ دروستکردنی هەژمار، یان تیکتی پاڵپشتی. لە هەر وێبگەڕێک و لە هەر ئامێرێکەوە بیکەرەوە، و کار دەکات.',
+    'trust3.title':'بڵاوکردنەوە و خستنەگەڕی خێرا و سادە','trust3.desc':'تەنها یەک فایلی سەربەخۆی HTML. دەتوانرێت بە شێوەیەکی ناوخۆیی لەسەر هەر سێرڤەرێکی وێبی دامەزراوەکە، تۆڕی ناوخۆیی (Intranet)، SharePoint، یان لە ڕێگەی تۆڕی دابەشکردنی ناوەڕۆک (CDN) دانرێت. بەبێ پشتبەستن بە شتی دەرەکی یان پرۆسەی دروستکردنی ئاڵۆز.',
+    'tech.lang.label':'زمانە پاڵپشتیکراوەکان','tech.lang.val':'ئینگلیزی · عەرەبی · کوردیی سۆرانی',
+    'tech.layouts.label':'شێوازەکانی کیبۆرد','tech.layouts.val':'QWERTY · ویندۆزی عەرەبی · ویندۆزی کوردیی سۆرانی',
+    'tech.size.label':'قەبارەی فایلی ئەم ئامرازە','tech.size.val':'~٧٥ کيلۆبایت · تەنها یەک فایلی سەربەخۆی HTML',
+    'tech.deps.label':'پشتبەستنە پرۆگرامییەکان','tech.deps.val':'نییە · ١٠٠٪ کۆدی ڕەسەن و پەتی (Vanilla JS)',
+    'cta.eyebrow':'٠٥ · ئێستا تاقی بکەرەوە','cta.h2':'ئامادەی بۆ تاقیکردنەوە؟<br>ئامرازەکە بکەرەوە.<br>هەر شتێک بێت دایبنێ (پەیستی بکە).<br>و بە چاوی خۆت بیبینە.',
+    'cta.sub':'بێ دروستکردنی هەژمار. بێ دامەزراندن. و پێویستی بە هیچ ڕوونکردنەوەیەک نییە. تەنها ئەو دەقە هەڵەیە دابنێ و سەیر بکە چۆن خۆی ڕاست دەکاتەوە.',
+    'cta1':'کردنەوەی Keyboard Saver ←','cta3':'پەیوەندی بە گەشەپێدەر بکە',
+    'cta.detail':'پرسیارت هەیە دەربارەی کارپێکردن یان بەستنەوەی ئامرازەکە؟ دوگمەی پەیوەندیکردنی سەرەوە بەکاربهێنە.',
+    'contact.eyebrow':'Developer Contact','contact.label.work_email':'Work Email','contact.label.personal_email':'Personal Email','contact.label.id':'Employee ID','contact.label.work_phone':'Work Phone','contact.label.personal_phone':'Personal Phone','contact.close':'Close',
+  }
+};
+const heroContent = {
+  en: {wrong:'غخعق لهلالاثقهسا هس سفهمم',right:'Your gibberish is still salvageable.',wrongRTL:true,rightRTL:false},
+  ar: {wrong:'ldpjha jfbd lk hgwtv',right:'صحح الي كتبته بأقل من ثانية',wrongRTL:false,rightRTL:true},
+  ku: {wrong:'pwyyst nakat dwwbare destpeybkeytewe',right:'ئەوەی نووسیوتە لە کەمتر لە چرکەیەکدا چاکی بکەرەوە',wrongRTL:false,rightRTL:true}
+};
+let _heroLang='en',_heroTimer=null;
+function updateHero(lang){_heroLang=lang;if(_heroTimer){clearTimeout(_heroTimer);_heroTimer=null;}const t=document.getElementById('hero-typer');if(t){t.textContent='';t.style.color='var(--text3)';}  _heroTimer=setTimeout(runHeroAnim,500);}
+function runHeroAnim(){
+  const h=heroContent[_heroLang]||heroContent.en,typer=document.getElementById('hero-typer');
+  if(!typer)return;
+  const wrong=h.wrong,right=h.right;let phase='typing-wrong',pos=0;
+  function setCursor(rtl){if(rtl)typer.classList.add('rtl-cursor');else typer.classList.remove('rtl-cursor');}
+  function tick(){
+    if(phase==='typing-wrong'){setCursor(h.wrongRTL);if(pos<wrong.length){typer.textContent=wrong.slice(0,pos+1);typer.style.color='var(--text3)';pos++;_heroTimer=setTimeout(tick,68+Math.random()*52);}else{phase='pausing';_heroTimer=setTimeout(tick,750);}}
+    else if(phase==='pausing'){phase='deleting';tick();}
+    else if(phase==='deleting'){setCursor(h.wrongRTL);const cur=typer.textContent;if(cur.length>0){typer.textContent=cur.slice(0,-1);_heroTimer=setTimeout(tick,16+Math.random()*30);}else{phase='typing-right';pos=0;_heroTimer=setTimeout(tick,380);}}
+    else if(phase==='typing-right'){setCursor(h.rightRTL);if(pos<right.length){typer.textContent=right.slice(0,pos+1);typer.style.color='var(--text)';pos++;_heroTimer=setTimeout(tick,72+Math.random()*38);}else{_heroTimer=setTimeout(()=>{typer.textContent='';typer.style.color='var(--text3)';phase='typing-wrong';pos=0;_heroTimer=setTimeout(tick,350);},3400);}}
+  }
+  tick();
+}
+
+function markTranslatables(){
+  const map=[
+    ['.cover-sub','cover.sub'],
+    ['.audience-grid .aud-card:nth-child(1) .aud-desc','aud1.desc'],['.audience-grid .aud-card:nth-child(1) .aud-quote','aud1.quote'],
+    ['.audience-grid .aud-card:nth-child(2) .aud-desc','aud2.desc'],['.audience-grid .aud-card:nth-child(2) .aud-quote','aud2.quote'],
+    ['.audience-grid .aud-card:nth-child(3) .aud-desc','aud3.desc'],['.audience-grid .aud-card:nth-child(3) .aud-quote','aud3.quote'],
+    ['.audience-grid .aud-card:nth-child(4) .aud-desc','aud4.desc'],['.audience-grid .aud-card:nth-child(4) .aud-quote','aud4.quote'],
+    ['.audience-grid .aud-card:nth-child(5) .aud-desc','aud5.desc'],['.audience-grid .aud-card:nth-child(5) .aud-quote','aud5.quote'],
+    ['.audience-grid .aud-card:nth-child(6) .aud-desc','aud6.desc'],['.audience-grid .aud-card:nth-child(6) .aud-quote','aud6.quote'],
+    ['.stats-grid .stat-card:nth-child(1) .stat-num','stat1.num'],['.stats-grid .stat-card:nth-child(1) .stat-unit','stat1.unit'],['.stats-grid .stat-card:nth-child(1) .stat-desc','stat1.desc'],
+    ['.stats-grid .stat-card:nth-child(2) .stat-num','stat2.num'],['.stats-grid .stat-card:nth-child(2) .stat-unit','stat2.unit'],['.stats-grid .stat-card:nth-child(2) .stat-desc','stat2.desc'],
+    ['.stats-grid .stat-card:nth-child(3) .stat-num','stat3.num'],['.stats-grid .stat-card:nth-child(3) .stat-unit','stat3.unit'],['.stats-grid .stat-card:nth-child(3) .stat-desc','stat3.desc'],
+    ['.stats-grid .stat-card:nth-child(4) .stat-num','stat4.num'],['.stats-grid .stat-card:nth-child(4) .stat-unit','stat4.unit'],['.stats-grid .stat-card:nth-child(4) .stat-desc','stat4.desc'],
+    ['.uc-tab:nth-child(1)','uc.tab1'],['.uc-tab:nth-child(2)','uc.tab2'],['.uc-tab:nth-child(3)','uc.tab3'],
+    ['#p1 .uc-scenario-label','p1.label'],['#p1 .uc-scenario-title','p1.title'],['#p1 .uc-scenario-desc','p1.desc1'],['#p1 .uc-ba-label.before','p1.ba.before'],['#p1 .uc-ba-label.after','p1.ba.after'],
+    ['#p2 .uc-scenario-label','p2.label'],['#p2 .uc-scenario-title','p2.title'],['#p2 .uc-scenario-desc','p2.desc1'],['#p2 .uc-ba-label.before','p2.ba.before'],['#p2 .uc-ba-label.after','p2.ba.after'],
+    ['#p3 .uc-scenario-label','p3.label'],['#p3 .uc-scenario-title','p3.title'],['#p3 .uc-scenario-desc','p3.desc1'],['#p3 .uc-ba-label.before','p3.ba.before'],['#p3 .uc-ba-label.after','p3.ba.after'],
+    ['.trust-grid .trust-card:nth-child(1) .trust-title','trust1.title'],['.trust-grid .trust-card:nth-child(1) .trust-desc','trust1.desc'],
+    ['.trust-grid .trust-card:nth-child(2) .trust-title','trust2.title'],['.trust-grid .trust-card:nth-child(2) .trust-desc','trust2.desc'],
+    ['.trust-grid .trust-card:nth-child(3) .trust-title','trust3.title'],['.trust-grid .trust-card:nth-child(3) .trust-desc','trust3.desc'],
+    ['.optional-card .trust-title','trust4.title'],['.optional-card .trust-desc','trust4.desc'],
+    ['.tech-pill:nth-child(1) .tech-pill-label','tech.lang.label'],['.tech-pill:nth-child(1) .tech-pill-val','tech.lang.val'],
+    ['.tech-pill:nth-child(2) .tech-pill-label','tech.layouts.label'],['.tech-pill:nth-child(2) .tech-pill-val','tech.layouts.val'],
+    ['.tech-pill:nth-child(3) .tech-pill-label','tech.size.label'],['.tech-pill:nth-child(3) .tech-pill-val','tech.size.val'],
+    ['.tech-pill:nth-child(4) .tech-pill-label','tech.deps.label'],['.tech-pill:nth-child(4) .tech-pill-val','tech.deps.val'],
+    ['#cta .sec-label','cta.eyebrow'],['#cta .sec-h2','cta.h2'],['.cta-sub','cta.sub'],
+    ['.btn-cta-primary','cta1'],['.cta-btns button.btn-cta-secondary','cta3'],['.cta-detail','cta.detail'],
+    ['.contact-eyebrow','contact.eyebrow'],['.contact-close','contact.close'],
+  ];
+  map.forEach(([sel,key])=>{const el=document.querySelector(sel);if(el)el.setAttribute('data-i18n',key);});
+}
+const trustChecks={
+  en:{c1:['No backend, no API calls','No logging or analytics','No cookies or tracking','Safe for confidential documents'],c2:['Works on Windows, macOS, iOS, Android','No plugins or extensions required','No admin rights needed','Works in any modern browser'],c3:['Single file: KeyboardSaver.html','Works offline after first load','IT-controllable hosting','Customisable branding']},
+  ar:{c1:['لا خوادم خلفية (Backend)، ولا واجهات برمجية (API calls)','لا توجد سجلات تتبع أو تحليلات نشاط','لا ملفات تعريف ارتباط (Cookies) أو أدوات تتبع','آمن وموثوق تماماً للمستندات والبيانات السرية للمؤسسات'],c2:['يعمل بكفاءة على أنظمة Windows و macOS و iOS و Android','لا يتطلب أي إضافات متصفح (Plugins) أو ملحقات خارجيّة','لا يحتاج لصلاحيات مسؤول النظام (Admin rights)','يعمل بسلاسة في أي متصفح ويب حديث'],c3:['ملف برمجى واحد متكامل: KeyboardSaver.html','يعمل بشكل كامل دون إنترنت (Offline) بعد التحميل الأول','استضافة آمنة ومحكومة بالكامل من قسم تقنية المعلومات','هوية بصرية مرنة وقابلة لتخصيص شعار وألوان الشركة'],c4:['يُدمج كخطوة معالجة مسبقة خفيفة وسريعة (Pre-processing)','يتلقى ليث نصوصاً نظيفة ومكتوبة باللغة والتخطيط الصحيح في كل مرة','لا يتطلب أي خطوات إضافية أو مجهود من موظفي خدمة العملاء','اختياري تماماً: تعمل الأداة المستقلة بذاتها دون الحاجة لأي دمج أو ربط']},
+  ku:{c1:['بێ سێرڤەری پشتەوە (Backend)، و بێ پەیوەندی بە API','هیچ تۆمارێکی بەدواداچوون یان شیکاری چالاکییەکان بوونی نییە','هیچ کووکی (Cookies) یان ئامرازێکی چاودێریکردن نییە','بە تەواوی سەلامەت و جێی متمانەیە بۆ بەڵگەنامە و زانیارییە نهێنییەکانی دامەزراوەکان'],c2:['بە باشی لەسەر سیستمەکانی Windows، macOS، iOS، و Android کار دەکات','پێویستی بە هیچ زیادکراوەیەکی وێبگەڕ (Plugins) یان پاشکۆی دەرەکی نییە','پێویستی بە دەسەڵاتی ئەدمین (Admin rights) نییە','بە هێمنی لە هەر وێبگەڕێکی نوێدا کار دەکات'],c3:['یەک فایلی پڕۆگرامی تەواو — KeyboardSaver.html','دوای یەکەم بارکردن، بە تەواوی بێ ئینتەرنێت (Offline) کار دەکات','میوانداریکردنێکی پارێزراو و بە تەواوی کۆنترۆڵکراو لەلایەن بەشی ئایتی (IT)ەوە','شوناسێکی بینراوی نەرم کە دەکرێت لۆگۆ و ڕەنگەکانی کۆمپانیاکەی تێدا جێگیر بکرێت']}
+};
+function applyTranslations(lang){
+  const d=document.documentElement;
+  d.setAttribute('dir',lang!=='en'?'rtl':'ltr');
+  d.setAttribute('lang',lang);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(T[lang]&&T[lang][k]!==undefined)el.innerHTML=T[lang][k];});
+  const navKeys=['overview','problem','audience','how','numbers','usecases','trust','cta'];
+  document.querySelectorAll('.nav-links a').forEach((a,i)=>{const k='nav.'+navKeys[i];if(T[lang]&&T[lang][k])a.textContent=T[lang][k];});
+  const tryBtn=document.querySelector('.btn-try');if(tryBtn&&T[lang]['nav.try'])tryBtn.textContent=T[lang]['nav.try'];
+  const rowMap=[['.contact-row:nth-child(1) .contact-row-label','contact.label.work_email'],['.contact-row:nth-child(2) .contact-row-label','contact.label.personal_email'],['.contact-row:nth-child(3) .contact-row-label','contact.label.id'],['.contact-row:nth-child(4) .contact-row-label','contact.label.work_phone'],['.contact-row:nth-child(5) .contact-row-label','contact.label.personal_phone']];
+  rowMap.forEach(([sel,key])=>{const el=document.querySelector(sel);if(el&&T[lang][key])el.textContent=T[lang][key];});
+  const ch=trustChecks[lang]||trustChecks.en;
+  [['.trust-grid .trust-card:nth-child(1)',ch.c1],['.trust-grid .trust-card:nth-child(2)',ch.c2],['.trust-grid .trust-card:nth-child(3)',ch.c3],['.optional-card',ch.c4]].forEach(([sel,arr])=>{const card=document.querySelector(sel);if(card)card.querySelectorAll('.trust-check').forEach((c,i)=>{if(arr[i]){c.textContent=arr[i];if(sel==='.optional-card'&&i===3)c.style.color='var(--gold)';}});});
+  const hideForNonEn=['audience','usecases'];
+  hideForNonEn.forEach(id=>{const s=document.getElementById(id);if(s)s.style.display=(lang==='en')?'':'none';});
+  updateHero(lang);
+  localStorage.setItem('ks-pres-lang',lang);
+}
+function openContact(){const m=document.getElementById('contact-modal');if(m){m.style.display='flex';document.body.style.overflow='hidden';}}
+function closeContact(){const m=document.getElementById('contact-modal');if(m){m.style.display='none';document.body.style.overflow='';}}
+function handleOverlayClick(e){if(e.target===document.getElementById('contact-modal'))closeContact();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeContact();});
+
+const nav=document.querySelector('nav');
+window.addEventListener('scroll',()=>{
+  if(nav)nav.classList.toggle('scrolled',window.scrollY>40);
+  const prog=document.getElementById('progress');
+  if(prog){const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;prog.style.width=pct+'%';}
+},{passive:true});
+
+const _sections=document.querySelectorAll('section[id]'),_navLinks=document.querySelectorAll('.nav-links a');
+const _obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){_navLinks.forEach(a=>a.classList.remove('active'));const lnk=document.querySelector('.nav-links a[href="#'+e.target.id+'"]');if(lnk)lnk.classList.add('active');}});},{threshold:0.4,rootMargin:'-60px 0px -40% 0px'});
+_sections.forEach(s=>_obs.observe(s));
+
+document.querySelectorAll('.uc-tab').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.uc-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.uc-panels > div').forEach(p=>p.classList.remove('active'));btn.classList.add('active');const panel=document.getElementById(btn.dataset.panel);if(panel)panel.classList.add('active');});});
+
+const themeToggle=document.getElementById('theme-toggle');
+if(localStorage.getItem('ks-theme')==='light')document.documentElement.setAttribute('data-theme','light');
+if(themeToggle){themeToggle.addEventListener('click',()=>{const isLight=document.documentElement.getAttribute('data-theme')==='light';document.documentElement.setAttribute('data-theme',isLight?'dark':'light');localStorage.setItem('ks-theme',isLight?'dark':'light');});}
+
+document.querySelectorAll('.lang-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applyTranslations(btn.dataset.lang);});});
+
+markTranslatables();
+const savedLang=localStorage.getItem('ks-pres-lang');
+if(savedLang&&savedLang!=='en'){const btn=document.querySelector('.lang-btn[data-lang="'+savedLang+'"]');if(btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applyTranslations(savedLang);}else{runHeroAnim();}}else{runHeroAnim();}
+</script>
+</body>
+</html>
