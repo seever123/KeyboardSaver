@@ -1,3 +1,6 @@
+# View it by clicking [here](https://seever123.github.io/KeyboardSaver/)
+
+
 # **The problem most of us run into daily**
 
 When you switch between different languages to write, i.e English, Arabic, and Kurdish Sorani, it's easy to type an entire message on the wrong keyboard layout. The result: a line of unreadable gibberish that has to be retyped from scratch; Costing time, focus, and sometimes the accuracy of what you were trying to say.
